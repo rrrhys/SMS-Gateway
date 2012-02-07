@@ -1,0 +1,17 @@
+SMS Website API.
+
+Cookie log in - is token valid and not expired? 
+If so, store user id in session and give back cookie token
+User Logs in with username and password.
+User name and password login: 
+Generate a cookie token, store in cookie db with user name and expiry now+1week
+Check valid. If valid, give back user ID and cookie token, store user id in session
+
+
+If user has templates defined, they see
+Use a template[      ] ->Choose template gives template view
+Send a new SMS to [              ] -> gives one off view
+
+If user has no templates they see
+Create template ->Gives create template view
+Send a new SMS to [              ] -> gives one off view

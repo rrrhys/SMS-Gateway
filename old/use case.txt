@@ -1,0 +1,37 @@
+SMS Website
+---------------
+
+Use case: Susan is the receptionist at a mechanic workshop, and needs to sms notifications to customers when their car is ready.
+Susan goes to somethingorother.com and logs in.
+
+She sees:
+Use a template:	[Some Template   ]^]
+Send an SMS to: [          ]
+Data required by this template:
+Number Plate [          ]
+Cost         [          ]
+
+Email Text   [                        ]              PREVIEW [[[[[[[()]]]]]]
+
+
+
+Send one-off:   
+[       
+	Send an SMS to: [          ] [People]			PREVIEW[[[[[]]]]]
+	Saying:         [enringegei irgf0eg- 
+					 oierg ienrg inegr 
+
+												]
+											
+	When:			Now
+					Specify: DD MM YYYY HH MM
+
+	OK:				Send
+
+]
+
+Make Template:
+[
+
+
+]

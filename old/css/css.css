@@ -1,0 +1,156 @@
+body {
+background-color: #eee;
+color: #605666;
+font-family: 'Maven Pro', 'Helvetica','Arial',cursive;
+}
+h1 {
+font-family: 'Nunito', sans-serif;
+}
+#container {
+padding: 20px;
+border-radius: 20px;
+width: 600px;
+margin: 20px auto;
+background-color: #fff;
+}
+table.bordered {
+border: 1px solid #ccc;
+}
+.table_group_heading{
+background-color: #b4aeff;
+color: #fff;
+padding: 6px;
+}
+th {
+padding: 10px;
+background-color: #dddafe;
+font-weight: normal;
+border-bottom: 1px solid #eee;
+border-left: 1px solid #eee;
+}
+td {
+padding: 5px 10px;
+}
+.queued_sms > td {
+border-left: 1px solid #eee;
+border-right: 1px solid #fff;
+}
+tr.footer > td {
+font-weight: bold;
+border-top: 1px solid #ccc;
+}
+input[type=text], input[type=password], textarea {
+border-radius: 10px;
+border: 1px solid #e6e4e8;
+width: 300px;
+}
+select , textarea, input{
+	font-family: 'Maven Pro', 'Helvetica','Arial',cursive;
+	padding: 5px;
+}
+input[type=submit], input[type=button] {
+background-color: #efedf0;
+color: #605666;
+border: 1px solid #605666;
+padding: 5px  20px;
+border-radius: 5px;
+}
+input[type=submit]:hover {
+background-color: #fff;
+}
+#washout
+{
+/* More settings for this element are in JS */
+background-color : #fff;
+position : absolute;
+opacity: 0.6;
+}
+#waiting {
+position: absolute;
+color: #000;
+left: 50%;
+width: 150px;
+margin-left: -75px;
+top: 60px;
+text-align: center;
+}
+#spinner_wrapper
+{
+margin: 10px auto;
+background-color: #000;
+width: 75px;
+height: 75px;
+background: url("../spinner.gif") no-repeat 20px 20px #000;
+border-radius: 10px;
+}
+#iphone
+{
+width : 320px;
+height : 600px;
+position : absolute;
+left : 50%;
+top : 50px;
+margin-left : -160px;
+background : url("../iphone.png") no-repeat 0px 0px #fff;
+}
+#preview_options {
+position: absolute;
+left: 50%;
+margin-left: 200px;
+top: 100px;
+}
+#iphone_sms
+{
+position: absolute;
+left: 43px;
+top: 210px;
+width: 191px;
+}
+#sms_top
+{
+position: absolute;
+background-image: url("../images/images/iphone_sms_slices_03.png");
+height: 23px;
+width: 191px;
+top: 0px;
+left: 0px;
+
+}
+#sms_heading
+{
+position: absolute;
+top: 0px;
+left: 0px;
+width: 191px;
+height: 50px;
+font-size: 13px;
+font-weight: bold;
+text-align: center;
+color: #fff;
+font-family: Arial;
+padding-top: 12px;
+text-shadow: #000 1px -1px 1px;
+}
+
+#sms_body
+{
+position: absolute;
+background-image: url("../images/images/iphone_sms_slices_05.png");
+width: 171px;
+top: 23px;
+left: 0px;
+color: #fff;
+font-family: Arial;
+font-size:12px;
+text-shadow: #000 1px -1px 1px;
+padding: 12px 10px;
+}
+#sms_bottom
+{
+position: absolute;
+background-image: url("../images/images/iphone_sms_slices_06.png");
+height: 11px;
+width: 191px;
+bottom: -11px;
+left: 0px;
+}

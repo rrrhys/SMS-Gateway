@@ -1,0 +1,169 @@
+$(function(){
+
+	
+	function user_selected_template()
+	{
+		$("#template_header").hide();
+		$("#template_fields").html("");
+			var selected = $(".template:selected");
+			$.each(templates.templates_received.templates,function(index,template){
+				if(template.id == $(selected).attr('id'))
+				{
+					//this is the template chosen.
+					$("#sms_text").text(template.text);
+					$("#base_sms_text").val(template.text);
+					if(template.fields_required.length > 0)
+					{
+						$("#template_header").show();
+						$.each(template.fields_required,function(index,field_req){
+						$("#template_fields").append("<tr><td>" + field_req + ": </td><td><input type=\"text\" id=\"field_req_" + field_req + "\" class=\"required_field\" /></td></tr>\r\n");
+						});
+						
+					}
+				}
+			});
+			}
+			
+	function clear_form_fields()
+	{
+	$("#sms_text").val("");
+	$("#sms_phone_number").val("");
+	}
+	
+
+	
+	var sms_preview = function(sms_text)
+	{
+	
+		$("body").append("<div id=\"washout\"></div>");
+		$("#washout").css({"width" : $("body").width(),
+							"height" : $("body").height(),
+							"left" : $("body").offset().left,
+							"top" : $("body").offset().top});
+		$("body").append("<div id=\"washout_display\"></div>");
+		$("#washout_display").append("<div id=\"preview_options\"><input type=\"button\" value=\"Send\" id=\"send_sms_from_preview\" /><br /><input type=\"button\" value=\"Make changes\" id=\"close_preview_box\" /></div>");
+		$("#washout_display").append("<div id=\"iphone\"></div>");
+		$("#iphone").append("<div id=\"iphone_sms\"></div>");
+		$("#iphone_sms").append("<div id=\"sms_top\"></div>");
+		
+		$("#iphone_sms").append("<div id=\"sms_body\"></div>");
+		$("#sms_body").append(sms_text);
+		$("#sms_body").append("<div id=\"sms_bottom\"></div>");
+		$("#iphone_sms").append("<div id=\"sms_heading\">Text from +61 404 123 300</div>");
+	
+	};
+	
+	templates.load_templates()
+	clear_form_fields();
+	$("#wait_activation").hide();
+	$("#specify_time_wrapper").hide();
+		$("#register_link").click(function(){
+			$("#login").hide();
+			$("#register").show()
+		});
+		$("#now_button").click(function(){
+			$("#specify_time_wrapper").hide();
+			$("#specify_button").css({"font-weight":"normal"});
+			$("#now_button").css({"font-weight": "bold"});
+			$("#queue_type").val("now");
+		});
+		$("#specify_button").click(function(){
+			$("#specify_time_wrapper").show();
+			$("#now_button").css({"font-weight":"normal"});
+			$("#specify_button").css({"font-weight": "bold"});
+			$("#queue_type").val("datepick");
+		});
+		
+		$("#submit_create_account").click(function(){
+			$("#register").hide();
+			$("#wait_activation").show();
+		});
+		
+		$("#submit_login").click(function(){
+			$("#login").hide();
+			$.post("login.php",
+			{
+				'emailaddress': $("#emailaddress").val,
+				'password': $("#password").val,
+			},function(data){
+			var dataobj = $.parseJSON(data);
+				if(dataobj.login_result != undefined){
+					if(dataobj.login_result == 0)
+					{
+						$("#login_errors").text(dataobj.login_errors);
+					}
+					else
+					{
+						$("#login_token").val(dataobj.login_token);
+						window.location = "index.php";
+					}
+					
+				}
+			});
+			$("#send_sms").show();
+		});
+		$("#send_sms_submit,#send_sms_from_preview").live('click',function(){
+		//get rid of the iphone preview.
+			$("#washout").remove();
+			$("#washout_display").remove();
+			show_waiting();
+			var sms_package = {};
+			sms_package.phone_number = $("#sms_phone_number").val();
+			sms_package.text = $("#sms_text").val();
+			sms_package.token = $("#login_token").val();
+			//set up time.
+			if($("#queue_type").val() == "datepick")
+			{
+				sms_package.time = $("#specify_date").val() + " " + $("#specify_time").val();
+			}
+			else
+			{
+				sms_package.time = "now";
+			}
+			var package_to_send = JSON.stringify(sms_package);
+			$("#debug").text(package_to_send);
+			$.post("./sms_server_connector.php",
+				{	
+					'action': 'send',
+					'phone': sms_package.phone_number,
+					'message_text': sms_package.text,
+					'schedule': sms_package.time,
+					'billing_id': sms_package.token,
+				},
+				function(data){
+				hide_waiting();
+				
+				}
+			);
+			
+			//reset form
+
+			templates.load_templates();
+			user_selected_template();
+			clear_form_fields();
+		});
+		$("#templates").change(function(){user_selected_template();});
+		
+			$(".required_field").live('change',function(){
+				//user is entering data in a template field for this sms, so live update the text for them.
+				var base_text = $("#base_sms_text").val();
+				$(".required_field").each(function(){
+					var data_field_id = $(this).attr('id');
+					var text_placeholder = "{" + data_field_id.substr(10,data_field_id.length - 10) + "}";
+					var text_entered = $(this).val();
+					base_text = base_text.replace(text_placeholder,text_entered);
+				});
+			$("#sms_text").val(base_text);
+			});
+	
+	$("#preview_sms").click(function(){sms_preview($("#sms_text").val());});
+	
+	
+	$("#close_preview_box").live('click',function(){
+	$("#washout").remove();
+	$("#washout_display").remove();
+	});
+	
+	
+	
+});

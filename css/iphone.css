@@ -1,0 +1,75 @@
+
+#iphone
+{
+width : 300px;
+height : 600px;
+position : absolute;
+left : 50%;
+top : 50px;
+margin-left : -160px;
+background-image : url("/images/iphone.png");
+background-repeat: no-repeat;
+display:none;
+}
+#preview_options {
+position: absolute;
+left: 50%;
+margin-left: 200px;
+top: 100px;
+}
+
+#iphone_sms
+{
+position: absolute;
+left: 43px;
+top: 210px;
+width: 191px;
+}
+#sms_top
+{
+position: absolute;
+background-image: url("/images/images/iphone_sms_slices_03.png");
+height: 23px;
+width: 191px;
+top: 0px;
+left: 0px;
+
+}
+#sms_heading
+{
+position: absolute;
+top: 0px;
+left: 0px;
+width: 191px;
+height: 50px;
+font-size: 13px;
+font-weight: bold;
+text-align: center;
+color: #fff;
+font-family: Arial;
+padding-top: 12px;
+text-shadow: #000 1px -1px 1px;
+}
+
+#sms_body
+{
+position: absolute;
+background-image: url("../images/images/iphone_sms_slices_05.png");
+width: 171px;
+top: 23px;
+left: 0px;
+color: #fff;
+font-family: Arial;
+font-size:12px;
+text-shadow: #000 1px -1px 1px;
+padding: 12px 10px;
+}
+#sms_bottom
+{
+position: absolute;
+background-image: url("../images/images/iphone_sms_slices_06.png");
+height: 11px;
+width: 191px;
+bottom: -11px;
+left: 0px;
+}
