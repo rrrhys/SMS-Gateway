@@ -1,24 +1,24 @@
-<div id="login">
-<form method="post" id="login_form">
-		<table>
-			<tr>
-				<td>Email Address</td>
-				<td><input type="text" name="emailaddress" id="emailaddress" /></td>
-			</tr>
-			<tr>
-				<td>Password</td>
-				<td><input type="password" name="password" id="password" /></td>
-			</tr>
-			<tr>
-				<td colspan="2" id="login_errors"></td>
-			</tr>
-			<tr>
-			<td></td>
-			<td>
-				<div class="buttons">
-					<a href="#" class="button save-big" onClick="document.forms['login_form'].submit();">Login</a>
-				</div></td>
-			</tr>
-		</table>
-</form>
+<div class="span8 offset2">
+	<form method="post" id="login_form" class="form-horizontal">
+	<div class="control-group">
+		<label for="emailaddress" class="control-label">Email Address</label>
+		<div class="controls">
+			<input type="text" name="emailaddress" id="emailaddress" class="span3 input-xlarge" />
+		</div>		
+	</div>
+	<div class="control-group">
+		<label for="password" class="control-label">Password</label>
+		<div class="controls">
+			<input type="password" name="password" id="password" class="span3" />
+		</div>	
+	</div>
+
+	<div class="form-actions">
+		<div class="buttons">
+			<a href="#" class="btn btn-large btn-primary" onClick="document.forms['login_form'].submit();"><i class="icon-ok icon-white"></i> Login</a>
+		</div>	
+	</div>
+
+
+	</form>
 </div>

@@ -90,7 +90,7 @@ $("#iphone").show();
 			//set up time.
 			if($("#queue_type").val() == "datepick")
 			{
-				sms_package.time = $("#specify_date").val() + " " + $("#specify_time").val();
+				sms_package.time = $("#specify_day").val() + "/" + $("#specify_month").val() + "/" + $("#specify_year").val() + " "+ $("#specify_time").val();
 			}
 			else
 			{

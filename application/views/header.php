@@ -20,7 +20,7 @@
 		<div class="navbar">
 			<div class="navbar-inner">
 				<div class="container">
-				<a class="brand" href="#">
+				<a class="brand" href="/">
 					SMS Gateway
 				</a>
 				<ul class="nav">
@@ -34,7 +34,7 @@
 					<?if(!$logged_in)
 					{
 					?>
-					<li><a href="/user/dashboard"><span class="nav_link">Dashboard</span></a></li>
+					
 					<li><a href="/welcome/register"><span class="nav_link right">Register</span></a></li>
 					<li><a href="/welcome/login"><span class="nav_link right">Login</span></a></li>
 					
@@ -42,8 +42,9 @@
 					<?}
 					else
 					{?>
+					<li><a href="/user/dashboard"><span class="nav_link">Dashboard</span></a></li>
 					<li><a href="/user/preferences" /><span class="nav_link right">Preferences</span></a></li>
-				<li><a href="/welcome/logout" /><span class="nav_link right">Logout</span></a></li>
+					<li><a href="/welcome/logout" /><span class="nav_link right">Logout</span></a></li>
 					<?}?>
 				</ul>
 				</div>

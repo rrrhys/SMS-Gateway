@@ -1,26 +1,48 @@
-<h3>Create a new template:</h3>
-<p>You can use templates to store commonly used SMS messages for re-use later.</p><br />
+<div class="span8 offset2">
+	<h3>Create a new template:</h3>
+	<p>You can use templates to store commonly used SMS messages for re-use later.</p><br />
+	<form action="" class="form-horizontal">
+		      <div class="control-group">
+	            <label class="control-label" for="templates">Template Name</label>
+	            <div class="controls">
+	             	<input type="text" name="sms_name" id="sms_name" />
+		        </div>
+		      </div>
+		      <div class="control-group">
+		      	<label class="control-label" for="new_field">Required Field</label>
+		      	<div class="controls">
+		      		<input type="text" name="new_field" id="new_field" class="span3" />
+					<input type="button" value="Add" id="btn_add_field" class="btn span1"/>
+		      	</div>
+		      	
+		      </div>
+
+	          
+	</form>
+</div>
+
+
+
 <table cellpadding=0 cellspacing=0 style="width: 600px; margin: auto;">
 	<tr>
 		<th class="fixed_width">Template Name</th>
-		<td><input type="text" name="sms_name" id="sms_name" /></td>
+		<td></td>
 	</tr>
 	<tr>
 		<th class="fixed_width">New Required Field</th>
 		<td>
-			<input type="text" name="new_field" id="new_field" />
-			<input type="button" value="Add" id="btn_add_field" />
+			
 		</td>
 	</tr>
 	<tr>
 		<th class="fixed_width">Contents of SMS</th>
 		<td>
-			<textarea name="sms_text" id="sms_text" cols="30" rows="10"></textarea>
+			<textarea name="sms_text" id="sms_text"class="span4"></textarea>
 		</td>
 	</tr>
 	<tr>
 		<th class="fixed_width">Save as new Template</th>
-		<td><input type="submit" value="Save Template" id="btn_save_template" /></td>
+		<td><input type="submit" value="Save Template" id="btn_save_template" class="btn" /></td>
 	</tr>
 </table>
 
