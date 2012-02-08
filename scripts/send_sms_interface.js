@@ -137,7 +137,7 @@ $("#iphone").show();
 					base_text = base_text.replace(text_placeholder,text_entered);
 				});
 				$("#sms_text").val(base_text);
-				alert(base_text);
+				//alert(base_text);
 			});
 	
 	$("#preview_sms").click(function(){sms_preview($("#sms_text").val());});
