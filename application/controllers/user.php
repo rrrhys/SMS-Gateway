@@ -26,7 +26,8 @@ class User extends CI_Controller {
 				'logged_in'=>$this->logged_in(),
 				'flash'=>$this->session->flashdata('flash'),
 				'error_flash'=>$this->session->flashdata('error_flash'),
-				'notifications'=>$this->session->userdata('notifications'));
+				'notifications'=>$this->session->userdata('notifications'),
+				'secret_key'=>$this->session->userdata('secret_key'));
 	}
 	/**
 	 * Index Page for this controller.
@@ -194,8 +195,22 @@ class User extends CI_Controller {
 		$this->db->insert('templates',$template);
 	}
 	
+	public function my_account()
+	{
+		if(!$this->logged_in()){
+			redirect("/");
+		}
+		$data = $this->_base_data();
+		$data['title'] = "My Account";
+		$this->load->view('header',$data);
+		$this->load->view('my_account',$data);
+		$this->load->view('footer',$data);
+	}	
 	public function dashboard()
 	{
+		if(!$this->logged_in()){
+			redirect("/");
+		}
 		$data = $this->_base_data();
 		$data['title'] = "Dashboard - SMS Sent and Queued";
 		$this->load->view('header',$data);

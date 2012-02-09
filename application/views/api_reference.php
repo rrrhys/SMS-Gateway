@@ -1,9 +1,10 @@
 <h1 id=""><?=$title?></h1>
 
-
+<h3>API Base</h3>
+<p>The base URL used for all API requests is <a href="http://<?=$_SERVER['SERVER_NAME']?>">http://<?=$_SERVER['SERVER_NAME']?></a></p>
 
 <h3>Queueing an SMS</h3>
-Post your URL Encoded values to <code>http://<?=$_SERVER['SERVER_NAME']?></code>. A cURL request is below for your information, and a detailed break-up of variables used<br />
+<p><br />A cURL request is below for your information, and a detailed break-up of variables used</p>
 <pre class="prettyprint
      linenums">
 curl http://test.smsgateway.dev/user/queue_sms \
@@ -69,4 +70,21 @@ curl http://test.smsgateway.dev/user/queue_sms \
      linenums">
 curl http://test.smsgateway.dev/user/get_templates_json
 </pre>
-<p><br />Page rendered in {elapsed_time} seconds</p>
+<p>Example of JSON package returned:
+<pre class="prettyprint
+     linenums">
+	{"templates":[
+		{	"id":"11111111111111.33333333",
+			"name":"Hello World Template",
+			"text":"Hi {name}",
+			"owner_id":"11111111111111.22222222",
+			"fields_required":["","name"]
+		},
+		{	"id":"11111111111111.44444444",
+			"name":"Hi There Template",
+			"text":"Hi there {Name}",
+			"owner_id":"11111111111111.22222222",
+			"fields_required":["","Name"]
+		}
+	]}
+</pre><br />Page rendered in {elapsed_time} seconds</p>

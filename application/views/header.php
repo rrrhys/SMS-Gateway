@@ -12,6 +12,7 @@
 	<script type="text/javascript" src="/scripts/jquery.timePicker.js"></script>
 	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/scripts/site.js"></script>
+	<script type="text/javascript" src="/scripts/jquery.zclip.min.js"></script>
 	<?if($notifications){?>
 	<script type="text/javascript" src="/scripts/notification.js"></script>
 	<?}?>
@@ -45,6 +46,7 @@
 					else
 					{?>
 					<li><a href="/user/dashboard"><span class="nav_link">Dashboard</span></a></li>
+					<li><a href="/user/my_account"><span class="nav_link">My Account</span></a></li>
 					<li><a href="/user/todo"><span class="nav_link">To Do</span></a></li>
 					<li><a href="/user/preferences" /><span class="nav_link right">Preferences</span></a></li>
 					<li><a href="/welcome/logout" /><span class="nav_link right">Logout</span></a></li>
