@@ -109,7 +109,7 @@ $("#iphone").show();
 				},
 				function(data){
 				dataobj = $.parseJSON(data);
-				alert(dataobj.result + ": " + dataobj.error_message);
+				window.location = "/user/create_sms";
 				clear_form_fields();
 				hide_waiting();
 				

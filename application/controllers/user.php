@@ -97,7 +97,7 @@ class User extends CI_Controller {
 		$data = $this->_base_data();
 		$data['title'] = "API Reference";
 		$this->load->view('header',$data);
-		$this->load->view('not_implemented',$data);
+		$this->load->view('api_reference',$data);
 		$this->load->view('footer',$data);		
 	}
 	public function about(){
@@ -257,13 +257,16 @@ class User extends CI_Controller {
 	public function queue_sms()
 	{
 
-			if($this->input->post("action") == "send")
+			if($this->input->post("action") == "send" || $this->input->post("action") == "")
 			{
 			//ID of sms gateway front end
 			
 			$application_id = $this->config->item("smss_application_id");
 			//ID of sms gateway 'company'
 			$billing_id = $this->session->userdata("billing_id");
+			if(!$billing_id){
+				$billing_id = $this->input->post("billing_id");
+			}
 			$sms_server_url = $this->config->item("smss_sms_server_url");
 			$schedule = $this->input->post("schedule");
 			if($schedule == "now")
@@ -337,6 +340,9 @@ class User extends CI_Controller {
 			}
 			//close connection
 			curl_close($ch);
+				if($retval['result'] == "success"){
+					$this->session->set_flashdata("flash","Message to ".$this->input->post('phone') ." queued successfully");
+				}
 				echo json_encode($retval);
 			}
 			if($this->input->post("action") == "notify")

@@ -7,7 +7,7 @@
 	<link rel="stylesheet" href="/css/bootstrap_annotation.css" />
 	<link rel="stylesheet" href="/css/iphone.css" />
 	<link rel="stylesheet" href="/css/timePicker.css" />
-	<script type="text/javascript" src="/scripts/jquery-1.7.1.js"></script>
+	<script type="text/javascript" src="/scripts/jquery-1.7.1.min.js"></script>
 	
 	<script type="text/javascript" src="/scripts/jquery.timePicker.js"></script>
 	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
@@ -56,12 +56,12 @@
 <?
 if($error_flash != "")
 {
-?><div class="alert alert-error"><a class="close">x</a><?=$error_flash;?></div><?
+?><div class="alert alert-error"><a class="close fade in" data-dismiss="alert">x</a><?=$error_flash;?></div><?
 }
 ?>
 <?
 if($flash != "")
 {
-?><div class="alert alert-success "><a class="close">x</a><?=$flash;?></div><?
+?><div class="alert alert-success "><a class="close fade in" data-dismiss="alert">x</a><?=$flash;?></div><?
 }
 ?>

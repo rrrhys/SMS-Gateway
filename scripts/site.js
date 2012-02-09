@@ -90,5 +90,5 @@ var load_dashboard_queued = function()
 	});
 }
 $(function(){
-	$(".alert").alert('close')
+	$(".alert").alert();
 })
