@@ -37,7 +37,7 @@ class Welcome extends CI_Controller {
 			log_message('debug', "return_object looks like $result");
 			if($return_object)
 			{
-				return $return_object->billing_id;
+				return $return_object->secret_key;
 			}
 
 	}
@@ -58,7 +58,7 @@ class Welcome extends CI_Controller {
 		$insert['activation_key'] = get_uuid();
 		
 		//tell the SMS Server that there is a new customer
-		$insert['billing_id'] = $this->_register_with_smsserver($insert['email_address'],1,0);		
+		$insert['secret_key'] = $this->_register_with_smsserver($insert['email_address'],1,0);		
 		log_message('debug', "Attempting to add new user: " . json_encode($insert));	
 		$this->db->insert('users',$insert);
 		
@@ -150,7 +150,7 @@ class Welcome extends CI_Controller {
 		'email_address'=>$q['email_address'],
 		'id'=>$q['id'],
 		'company_id'=>$q['company_id'],
-		'billing_id'=>$q['billing_id'],
+		'secret_key'=>$q['secret_key'],
 		'company_admin'=>$q['company_admin'],
 		'timezone'=>$q['timezone'],
 		'notifications'=>$q['use_popup_notifications']));

@@ -100,6 +100,13 @@ class User extends CI_Controller {
 		$this->load->view('api_reference',$data);
 		$this->load->view('footer',$data);		
 	}
+		public function todo(){
+		$data = $this->_base_data();
+		$data['title'] = "To do";
+		$this->load->view('header',$data);
+		$this->load->view('todo',$data);
+		$this->load->view('footer',$data);		
+	}
 	public function about(){
 		$data = $this->_base_data();
 		$data['title'] = "About SMS Gateway";
@@ -256,16 +263,16 @@ class User extends CI_Controller {
 	}
 	public function queue_sms()
 	{
-
+			$retval = array('result'=>'fail','error_message'=>'');
 			if($this->input->post("action") == "send" || $this->input->post("action") == "")
 			{
 			//ID of sms gateway front end
 			
 			$application_id = $this->config->item("smss_application_id");
 			//ID of sms gateway 'company'
-			$billing_id = $this->session->userdata("billing_id");
-			if(!$billing_id){
-				$billing_id = $this->input->post("billing_id");
+			$secret_key = $this->session->userdata("secret_key");
+			if(!$secret_key){
+				$secret_key = $this->input->post("secret_key");
 			}
 			$sms_server_url = $this->config->item("smss_sms_server_url");
 			$schedule = $this->input->post("schedule");
@@ -273,6 +280,26 @@ class User extends CI_Controller {
 			{
 				$schedule = date ("Y-m-d H:i:s",now());
 			}
+			$callback_page = $this->input->post("callback_page");
+			if($callback_page == ""){
+				$callback_page = "http://" .$_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+			}
+
+			//auth here - is this a legit secret key?
+			//if so get email address too.
+			$email_address = $this->session->userdata('email_address');
+			if($email_address == ""){
+				//get email address corresponding with secret key.
+				$email_address = $this->user->get_email_from_secret_key($secret_key);
+			}
+			if($email_address == ""){
+				$retval['error_message'] = "SMS Gateway: Secret Key Invalid.";
+				echo $retval;
+				die();
+			}
+			//
+			$billing_id = $this->config->item("smss_billing_id");
+
 				//check that user token is ok....
 			//set POST variables
 			$url = $sms_server_url . "queue/queue_sms/";
@@ -282,7 +309,7 @@ class User extends CI_Controller {
 						'phone'=>urlencode($this->input->post('phone')),
 						'message_text'=>urlencode($this->input->post('message_text')),
 						'schedule'=>urlencode($schedule),
-						'callback_page'=>"http://" .$_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']
+						'callback_page'=>urlencode($callback_page)
 					);
 
 			//url-ify the data for the POST
@@ -305,7 +332,7 @@ class User extends CI_Controller {
 			$result = curl_exec($ch);
 			$return_object = json_decode($result);
 			
-			$retval = array('result'=>'fail','error_message'=>'');
+			
 			log_message('debug', "Queue URL: $url");	
 			log_message('debug', "Queue data: $fields_string");	
 			log_message('debug', "Return Object: $result");	
@@ -318,7 +345,7 @@ class User extends CI_Controller {
 					'phone'=>$this->input->post('phone'),
 					'message_text'=>$this->input->post('message_text'),
 					'schedule'=>$schedule,
-					'billing_id'=>$billing_id,
+					'secret_key'=>$secret_key,
 					'email_address'=>$this->session->userdata('email_address'),
 					'time_queued'=>date ("Y-m-d H:i:s",now()),
 					'company_id'=>'');

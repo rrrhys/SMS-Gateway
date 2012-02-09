@@ -128,7 +128,7 @@ $(function(){
 					'phone': sms_package.phone_number,
 					'message_text': sms_package.text,
 					'schedule': sms_package.time,
-					'billing_id': sms_package.token,
+					'secret_key': sms_package.token,
 				},
 				function(data){
 				hide_waiting();

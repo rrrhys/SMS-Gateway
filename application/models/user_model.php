@@ -7,11 +7,11 @@ class Queue_model extends CI_Model
 		parent::__construct();
 		$this->load->database();
 	}
-	function queue_sms($application_id, $billing_id, $phone, $message_text, $schedule,$callback_page)
+	function queue_sms($application_id, $secret_key, $phone, $message_text, $schedule,$callback_page)
 	{
 	$this->load->helper('date');
 		$retval = array('result'=>'fail','sms_id'=>'','error'=>array('code'=>0,'message'=>''));
-		if(!$this->accept_sms_from_client($billing_id))
+		if(!$this->accept_sms_from_client($secret_key))
 		{
 			$retval['error']['code'] = -1;
 			$retval['error']['message'] = "Billing ID not authorised to queue sms.";
@@ -31,7 +31,7 @@ class Queue_model extends CI_Model
 							'message_text'=>$message_text,
 							'schedule'=>$schedule,
 							'callback_page'=>$callback_page,
-							'billing_id'=>$billing_id,
+							'secret_key'=>$secret_key,
 							'application_id'=>$application_id,
 							'id'=>$new_sms_id);
 		$q = $this->db->insert('primary_queue',$new_sms);					
@@ -43,9 +43,9 @@ class Queue_model extends CI_Model
 		return $retval;
 	}
 	
-	function accept_sms_from_client($billing_id)
+	function accept_sms_from_client($secret_key)
 	{
-		$this->db->where(array('accept_sms'=>1,'id'=>$billing_id));
+		$this->db->where(array('accept_sms'=>1,'id'=>$secret_key));
 		$q = $this->db->get('clients')->result_array();
 		return count($q) == 1;
 	}

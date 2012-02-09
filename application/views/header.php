@@ -45,6 +45,7 @@
 					else
 					{?>
 					<li><a href="/user/dashboard"><span class="nav_link">Dashboard</span></a></li>
+					<li><a href="/user/todo"><span class="nav_link">To Do</span></a></li>
 					<li><a href="/user/preferences" /><span class="nav_link right">Preferences</span></a></li>
 					<li><a href="/welcome/logout" /><span class="nav_link right">Logout</span></a></li>
 					<?}?>

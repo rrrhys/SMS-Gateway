@@ -41,7 +41,7 @@ CREATE TABLE `sms` (
   `phone` varchar(20) NOT NULL,
   `message_text` varchar(1000) NOT NULL,
   `schedule` datetime DEFAULT NULL,
-  `billing_id` varchar(50) NOT NULL,
+  `secret_key` varchar(50) NOT NULL,
   `email_address` varchar(50) NOT NULL,
   `time_queued` datetime DEFAULT NULL,
   `time_sent` datetime DEFAULT NULL,
@@ -104,7 +104,7 @@ CREATE TABLE `users` (
   `active` tinyint(1) DEFAULT '0',
   `activation_key` varchar(50) DEFAULT NULL,
   `send_sms` tinyint(1) DEFAULT '0',
-  `billing_id` varchar(50) DEFAULT NULL,
+  `secret_key` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;

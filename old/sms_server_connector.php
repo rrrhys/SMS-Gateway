@@ -3,7 +3,7 @@
 //ID of sms gateway front end
 $application_id = '4e12c500660bc0.68748235';
 //ID of sms gateway 'company'
-$billing_id = "4e12ed4ac44201.92757863";
+$secret_key = "4e12ed4ac44201.92757863";
 $sms_server_url = 'http://dev.smsserver.com.au/';
 if($_POST["action"] == "send")
 {
@@ -13,7 +13,7 @@ if($_POST["action"] == "send")
 $url = $sms_server_url . "queue/queue_sms/";
 $fields = array(
             'application_id'=>urlencode($application_id),
-            'billing_id'=>urlencode($billing_id),
+            'secret_key'=>urlencode($secret_key),
             'phone'=>urlencode($_POST['phone']),
             'message_text'=>urlencode($_POST['message_text']),
             'schedule'=>urlencode($_POST['schedule']),
