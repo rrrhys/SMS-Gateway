@@ -12,7 +12,6 @@
 	<script type="text/javascript" src="/scripts/jquery.timePicker.js"></script>
 	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/scripts/site.js"></script>
-	<script type="text/javascript" src="/scripts/jquery.zclip.min.js"></script>
 	<?if($notifications){?>
 	<script type="text/javascript" src="/scripts/notification.js"></script>
 	<?}?>
