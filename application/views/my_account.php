@@ -14,7 +14,7 @@
         </form>
         <script type="text/javascript">
         $(function(){
-        		$("i[rel=popover_secret_key]").popover();
+        		$("i[rel=popover_secret_key]").popover({'placement':'bottom'});
 	        });
 	        </script>	
     </div>
