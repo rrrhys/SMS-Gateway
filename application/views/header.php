@@ -26,19 +26,19 @@
 					SMS Gateway
 				</a>
 				<ul class="nav">
-					<li><a href="/user/create_sms"><span class="nav_link">New SMS</span></a></li>
+					<li><a href="/sms/create_sms"><span class="nav_link">New SMS</span></a></li>
 					
-					<li><a href="/user/templates"><span class="nav_link">Templates</span></a></li>
+					<li><a href="/sms/templates"><span class="nav_link">Templates</span></a></li>
 
-					<li><a href="/user/api_reference"><span class="nav_link">API Reference</span></a></li>
+					<li><a href="/sms/api_reference"><span class="nav_link">API Reference</span></a></li>
 
 					<li></li>
 					<?if(!$logged_in)
 					{
 					?>
 					
-					<li><a href="/welcome/register"><span class="nav_link right">Register</span></a></li>
-					<li><a href="/welcome/login"><span class="nav_link right">Login</span></a></li>
+					<li><a href="/user/register"><span class="nav_link right">Register</span></a></li>
+					<li><a href="/user/login"><span class="nav_link right">Login</span></a></li>
 					
 
 					<?}
@@ -48,7 +48,7 @@
 					<li><a href="/user/my_account"><span class="nav_link">My Account</span></a></li>
 					<li><a href="/user/todo"><span class="nav_link">To Do</span></a></li>
 					<li><a href="/user/preferences" /><span class="nav_link right">Preferences</span></a></li>
-					<li><a href="/welcome/logout" /><span class="nav_link right">Logout</span></a></li>
+					<li><a href="/user/logout" /><span class="nav_link right">Logout</span></a></li>
 					<?}?>
 				</ul>
 				</div>

@@ -75,5 +75,50 @@ class User_model extends CI_Model
 		$data['user_id'] = $user_id;
 		$this->email_model->send_email("activation_email",$data);
 	}
+	public function _activate($activation_key){
+		$this->db->where('activation_key',$activation_key);
+		$update['active'] = '1';
+		$this->db->update('users',$update);
+		$this->db->where('activation_key',$activation_key);
+		$q = $this->db->get('users')->num_rows();
+		return $q;
+	}
+	 public function _login($email_address, $password){
+	
+	$this->_rate_limit();
+	$shapassword = $this->_hash_password($password);
+	$this->db->where(array(
+		'email_address'=>$email_address,
+		'password'=>$shapassword,
+		'active'=>1));
+		$q = $this->db->get('users')->result_array();
+		$q = $q[0];
+		if(count($q) > 0)
+		{
+		
+		$this->session->set_flashdata('flash',"Login successful!");
+		$this->_reset_rate_limit();
+		$this->session->set_userdata(array(
+		'email_address'=>$q['email_address'],
+		'id'=>$q['id'],
+		'company_id'=>$q['company_id'],
+		'secret_key'=>$q['secret_key'],
+		'company_admin'=>$q['company_admin'],
+		'timezone'=>$q['timezone'],
+		'notifications'=>$q['use_popup_notifications']));
+		return true;
+		
+		}
+		else
+		{
+		return false;
 
+		}
+	}
+	public function _email_exists($email_address)
+	{
+		$this->db->where('email_address',$email_address);
+		$q = $this->db->get('users')->num_rows();
+		return $q;
+	}
 }

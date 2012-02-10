@@ -42,12 +42,18 @@ class User_tests extends Toast
 		
 		$user_count = $this->user_model->count_users();
 		$this->ids[] = $this->user_model->register($this->data['fake_email'], $this->data['password'], $this->data['timezone']);
-		$user = $this->user_model->get_user_by_email($this->data['fake_email']);
 			if(!$this->_assert_not_equals($user_count,$this->user_model->count_users())){
 				$this->output("A good email address, password and timezone should register.");
 			}
 			else {
 				$this->output("Good email address passed.");
+			}
+		$this->ids[] = $this->user_model->register($this->data['fake_email'], $this->data['password'], $this->data['timezone']);
+			if(!$this->_assert_not_equals($user_count+1,$this->user_model->count_users())){
+				$this->output("Same email address incorrectly registers twice.");
+			}
+			else {
+				$this->output("Same email address correctly fails.");
 			}
 	}
 	function test_junk_emails_fail(){
