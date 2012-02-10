@@ -47,70 +47,9 @@ class Welcome extends CI_Controller {
 		$q = $this->db->get('users')->result_array();
 		return count($q) == 1;
 	}
-	public function _register($email_address, $password, $timezone)
-	{
-		$new_id = get_uuid();
-		$insert = array();
-		$insert['id'] = $new_id;
-		$insert['email_address'] = $email_address;
-		$insert['password']= $this->_hash_password($password);
-		$insert['timezone'] = $timezone;
-		$insert['activation_key'] = get_uuid();
-		
-		//tell the SMS Server that there is a new customer
-		$insert['secret_key'] = $new_id//$this->_register_with_smsserver($insert['email_address'],1,0);		
-		log_message('debug', "Attempting to add new user: " . json_encode($insert));	
-		$this->db->insert('users',$insert);
-		$this->_send_activation_email($new_id);
-		return true;
-	}
-	public function _send_activation_email($user_id){
-	log_message('error', "ACTIVATION EMAIL NOT IMPLEMENTED.");	
-	$data = array();
-	$data['user_id'] = $user_id;
-	$this->_send_email("activation_email",$data);
-	}
-	function _send_email($email_template_name,$data)
-	{
-	$this->load->library('email');
-	$email_id = get_uuid();
-	log_message('debug', "_send_email handler: $email_template_name, ID: $email_id");	
-	
 
-		switch($email_template_name){
-			case("activation_email"):
-				$this->db->where('id',$data['user_id']);
-				$q = $this->db->get('users')->result_array();
-				$q=  $q[0];
-				$data['activation_key'] = $q['activation_key'];
-				$data['from_name'] = $this->config->config['product_name'];
-				$data['from_email'] = $this->config->config['generic_email'];
-				$data['bcc_email'] = $this->config->config['carbon_copy_email'];
-				$data['to_email'] = $q['email_address'];
-				$data['server'] = $_SERVER['SERVER_NAME'];
-				$email = $this->load->view("emails/".$email_template_name,$data,true);
-			break;
-		}
-		log_message('debug', "email data:: . " . json_encode($data),true);	
-			$this->load->library('email');
-			$config['charset'] = 'iso-8859-1';
-			$config['wordwrap'] = TRUE;
-			$config['mailtype'] = "html";
 
-			$this->email->initialize($config);
-			$this->email->from($data['from_email'], $data['from_name']);
-			$this->email->to($data['to_email']); 
-			$this->email->bcc($data['bcc_email']); 
 
-			$this->email->subject("Activate your new account");
-			$this->email->message($email);	
-
-			$this->email->send();
-
-			echo $this->email->print_debugger();
-		
-		
-	}
 	function _base_data()
 	{
 		return array(
@@ -160,10 +99,7 @@ class Welcome extends CI_Controller {
 
 		}
 	}
-	public function _hash_password($password){
-	$shapassword = sha1($password . $this->config->config['hash']);
-	return $shapassword;
-	}
+
 	 public function _reset_rate_limit()
 	{
 	$this->session->unset_userdata('attempts');

@@ -4,11 +4,13 @@ require_once(APPPATH . '/controllers/test/Toast.php');
 class User_tests extends Toast
 {
 	public $data = array();
+	public $ids = array();
 	function User_tests()
 	{
 		parent::Toast(__FILE__);
 		// Load any models, libraries etc. you need here
 		$this->load->model('user_model');
+		$this->config->config['unit_tests_running'] = true;
 	}
 
 	/**
@@ -19,19 +21,99 @@ class User_tests extends Toast
 		$this->data['fake_email'] = "foo@bar.com";
 		$this->data['password'] = "insecure_pass";
 		$this->data['timezone'] = "UP10";
+		$this->ids = array();
 	}
 
 	/**
 	 * OPTIONAL; Anything in this function will be run after each test
 	 * I use it for setting $this->message = $this->My_model->getError();
 	 */
-	function _post() {}
+	function _post() {
+		$this->db->where('email_address',$this->data['fake_email']);
+		$this->db->delete('users');
+	}
 
 
 	/* TESTS BELOW */
+	function output($message){
+		$this->message .= ($this->message ? "<br />"  : "") . $message;
+	}
 	function test_registration_can_occur(){
+		
+		$user_count = $this->user_model->count_users();
+		$this->ids[] = $this->user_model->register($this->data['fake_email'], $this->data['password'], $this->data['timezone']);
+		$user = $this->user_model->get_user_by_email($this->data['fake_email']);
+			if(!$this->_assert_not_equals($user_count,$this->user_model->count_users())){
+				$this->output("A good email address, password and timezone should register.");
+			}
+			else {
+				$this->output("Good email address passed.");
+			}
+	}
+	function test_junk_emails_fail(){
+		$user_count = $this->user_model->count_users();
 
-		$this->user_model->register($this->data['fake_email'], $this->data['password'], $this->data['timezone']);
+		$this->ids[] = $this->user_model->register("", "foo bar", $this->data['timezone']);
+		$user = $this->user_model->get_user_by_email($this->data['fake_email']);
+		if(!$this->_assert_equals($user_count, $this->user_model->count_users())){
+			$this->output("Empty Email should fail registration");
+		}
+		else
+		{
+			$this->output("Empty Email fails correctly");
+		}
+
+		$this->ids[] = $this->user_model->register("a@b", "foo bar", $this->data['timezone']);
+		$user = $this->user_model->get_user_by_email($this->data['fake_email']);
+		if(!$this->_assert_equals($user_count, $this->user_model->count_users())){
+			$this->output("No domain extension should fail");
+		}
+		else
+		{
+			$this->output("No domain extension fails correctly");
+		}
+		$this->ids[] = $this->user_model->register("rrrhys@gmail@a.com", "foo bar", $this->data['timezone']);
+		$user = $this->user_model->get_user_by_email($this->data['fake_email']);
+		if(!$this->_assert_equals($user_count, $this->user_model->count_users())){
+			$this->output("Too many @'s should fail");
+		}
+		else
+		{
+			$this->output("Too many @'s fails correctly");
+		}
+		foreach($this->ids as $id){
+			$this->db->where('id',$id)->delete('users');
+		}
+	}
+	function test_empty_password_fails(){
+
+		$this->ids[] = $this->user_model->register($this->data['fake_email'], "", $this->data['timezone']);
+		$user = $this->user_model->get_user_by_email($this->data['fake_email']);
+		if(!$this->_assert_empty($user)){
+			$this->output("A no password should fail registration");
+		}
+		else
+		{
+			$this->output("No password fails correctly");
+		}
+		foreach($this->ids as $id){
+			$this->db->where('id',$id)->delete('users');
+		}
+	}
+	function test_short_password_fails(){
+
+		$this->ids[] = $this->user_model->register($this->data['fake_email'], "a", $this->data['timezone']);
+		$user = $this->user_model->get_user_by_email($this->data['fake_email']);
+		if(!$this->_assert_empty($user)){
+			$this->output("A short password should fail registration");
+		}
+		else
+		{
+			$this->output("Short password fails correctly");
+		}
+		foreach($this->ids as $id){
+			$this->db->where('id',$id)->delete('users');
+		}
 	}
 	function test_simple_addition()
 	{
