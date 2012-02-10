@@ -58,12 +58,9 @@ class Welcome extends CI_Controller {
 		$insert['activation_key'] = get_uuid();
 		
 		//tell the SMS Server that there is a new customer
-		$insert['secret_key'] = $this->_register_with_smsserver($insert['email_address'],1,0);		
+		$insert['secret_key'] = $new_id//$this->_register_with_smsserver($insert['email_address'],1,0);		
 		log_message('debug', "Attempting to add new user: " . json_encode($insert));	
 		$this->db->insert('users',$insert);
-		
-
-		
 		$this->_send_activation_email($new_id);
 		return true;
 	}

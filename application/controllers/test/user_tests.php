@@ -3,17 +3,23 @@ require_once(APPPATH . '/controllers/test/Toast.php');
 
 class User_tests extends Toast
 {
+	public $data = array();
 	function User_tests()
 	{
 		parent::Toast(__FILE__);
 		// Load any models, libraries etc. you need here
+		$this->load->model('user_model');
 	}
 
 	/**
 	 * OPTIONAL; Anything in this function will be run before each test
 	 * Good for doing cleanup: resetting sessions, renewing objects, etc.
 	 */
-	function _pre() {}
+	function _pre() {
+		$this->data['fake_email'] = "foo@bar.com";
+		$this->data['password'] = "insecure_pass";
+		$this->data['timezone'] = "UP10";
+	}
 
 	/**
 	 * OPTIONAL; Anything in this function will be run after each test
@@ -23,8 +29,9 @@ class User_tests extends Toast
 
 
 	/* TESTS BELOW */
-	function registration_can_occur(){
-		
+	function test_registration_can_occur(){
+
+		$this->user_model->register($this->data['fake_email'], $this->data['password'], $this->data['timezone']);
 	}
 	function test_simple_addition()
 	{
