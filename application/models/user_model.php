@@ -115,7 +115,7 @@ class User_model extends CI_Model
 
 		}
 	}
-	public function _email_exists($email_address)
+	public function email_exists($email_address)
 	{
 		$this->db->where('email_address',$email_address);
 		$q = $this->db->get('users')->num_rows();

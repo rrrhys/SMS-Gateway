@@ -17,7 +17,7 @@
 	            <input type="text" name="sms_phone_number" id="sms_phone_number" class="input-xlarge" />
 	            </div>
           </div>
-          <div id="template_fields" class="control-group">
+          <div id="template_fields">
 
           </div>
           <div class="control-group">

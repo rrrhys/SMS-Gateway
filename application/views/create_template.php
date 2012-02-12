@@ -34,18 +34,6 @@
 	</div>
 </div>
 
-
-
-<table cellpadding=0 cellspacing=0 style="width: 600px; margin: auto;">
-
-	<tr>
-		<th class="fixed_width">Save as new Template</th>
-		<td></td>
-	</tr>
-</table>
-
-
-
 <input type="hidden" name="sms_fields" id="sms_fields" value="" />
 <script type="text/javascript">
 var new_template = {};
@@ -61,12 +49,12 @@ $(function(){
 	});
 	
 	$("#btn_save_template").click(function(){
-		$.post("/user/save_template",{
+		$.post("/sms/save_template",{
 			'name': $("#sms_name").val(),
 			'text': $("#sms_text").val(),
 			'fields_required': $("#sms_fields").val(),
 		},function(data){
-			window.location = "/user/templates";
+			window.location = "/sms/templates";
 			return false;
 		});
 	});

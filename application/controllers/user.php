@@ -75,7 +75,7 @@ class User extends MY_Controller {
 				$this->session->set_flashdata('error_flash',"The email address supplied was invalid.");
 				redirect("/welcome/register");			
 			}
-			if($this->_email_exists($this->input->post('email_addressr')))
+			if($this->user_model->email_exists($this->input->post('email_addressr')))
 			{
 			log_message('debug', "Email exists: " . $this->input->post('email_addressr'));	
 				$this->session->set_flashdata('error_flash',"This email address exists.");
@@ -100,7 +100,7 @@ class User extends MY_Controller {
 				redirect("/welcome/register");				
 			}
 		
-			if($this->_register($this->input->post('email_addressr'),$this->input->post('passwordr'),$this->input->post("timezones")))
+			if($this->user_model->register($this->input->post('email_addressr'),$this->input->post('passwordr'),$this->input->post("timezones")))
 			{
 			log_message('debug', "Register Successful");
 			$this->session->set_flashdata('flash',"Your account has been created! Please check your email for further instructions.");
@@ -273,14 +273,7 @@ class User extends MY_Controller {
 		$this->load->view('footer',$data);
 	}
 	
-	public function add_template()
-	{
-		$data = $this->_base_data();
-		$data['title'] = "Templates - Create a new SMS Template";
-		$this->load->view('header',$data);
-		$this->load->view('create_template',$data);
-		$this->load->view('footer',$data);	
-	}
+
 	public function get_notifications_json()
 	{
 		$this->db->where("time_notified < ", date ('Y-m-d H:i:s',now()));

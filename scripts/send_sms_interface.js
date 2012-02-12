@@ -20,10 +20,12 @@ $(function(){
 						$.each(template.fields_required,function(index,field_req){
 							if(field_req != ""){
 								$("#template_fields").append(
-									"<label class='control-label' for='field_req_" + field_req + "'>" + field_req + "</label>" +
+									"<div class='control-group success'><label class='control-label' for='field_req_" + field_req + "'>" + field_req + "</label>" +
 									"  <div class='controls'>" +
 									"    <input type='text' name='field_req_" + field_req + "' id='field_req_" + field_req + "' class='input-xlarge required_field' />" +
-									"  </div><br />");
+									"	 <span class='help-inline'>Required for this template</span>" +
+									"  </div>" +
+									"</div>");
 								//$("#template_fields").append("<tr><th>" + field_req + ": </th><td><input type=\"text\" id=\"field_req_" + field_req + "\" class=\"required_field\" /></td></tr>\r\n");
 							}
 						});

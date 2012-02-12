@@ -45,7 +45,14 @@ class Sms extends MY_Controller {
 																			$this->input->post("name"),
 																			$this->input->post("text"),
 																			$fields_required);
-
+	}
+	public function add_template()
+	{
+		$data = $this->_base_data();
+		$data['title'] = "Templates - Create a new SMS Template";
+		$this->load->view('header',$data);
+		$this->load->view('create_template',$data);
+		$this->load->view('footer',$data);	
 	}
 
 }
