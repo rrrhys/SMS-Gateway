@@ -202,13 +202,7 @@ class User extends MY_Controller {
 		$this->load->view('change_password',$data);
 		$this->load->view('footer',$data);	
 	}
-	public function api_reference(){
-		$data = $this->_base_data();
-		$data['title'] = "API Reference";
-		$this->load->view('header',$data);
-		$this->load->view('api_reference',$data);
-		$this->load->view('footer',$data);		
-	}
+
 		public function todo(){
 		$data = $this->_base_data();
 		$data['title'] = "To do";
@@ -326,14 +320,7 @@ class User extends MY_Controller {
 		$this->load->view('footer',$data);
 	}
 	
-	public function templates()
-	{
-		$data = $this->_base_data();
-		$data['title'] = "Templates - Set up ready to go SMS messages";
-		$this->load->view('header',$data);
-		$this->load->view('templates',$data);
-		$this->load->view('footer',$data);
-	}
+
 	public function add_template()
 	{
 		$data = $this->_base_data();
@@ -507,10 +494,6 @@ class User extends MY_Controller {
 				$this->db->update('sms',array('id'=>$id,'time_sent'=>$time_sent,'time_notified'=>$time_notified));
 				echo "OK";
 			}
-	}
-	public function logged_in()
-	{
-		return $this->session->userdata('email_address') == true;
 	}
 	public function _reset_rate_limit()
 	{
