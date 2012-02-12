@@ -18,7 +18,8 @@ class MY_Controller extends CI_Controller {
 				'logged_in'=>$this->logged_in(),
 				'flash'=>$this->session->flashdata('flash'),
 				'error_flash'=>$this->session->flashdata('error_flash'),
-				'notifications'=>$this->session->userdata('notifications'));
+				'notifications'=>$this->session->userdata('notifications'),
+				'secret_key'=>$this->session->userdata('secret_key'));
 	}
 
 	 public function uuid()

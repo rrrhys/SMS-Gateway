@@ -101,7 +101,7 @@ $("#iphone").show();
 			var package_to_send = JSON.stringify(sms_package);
 			//for(i = 0; i < 500; i++)
 			//{
-			$.post("/user/queue_sms/",
+			$.post("/sms/queue_sms/",
 				{	
 					'action': 'send',
 					'phone': sms_package.phone_number,
@@ -111,9 +111,9 @@ $("#iphone").show();
 				},
 				function(data){
 				dataobj = $.parseJSON(data);
-				window.location = "/user/create_sms";
-				clear_form_fields();
-				hide_waiting();
+				window.location = "/user/dashboard";
+				/*clear_form_fields();
+				hide_waiting();*/
 				
 				
 				}

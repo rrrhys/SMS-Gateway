@@ -42,18 +42,15 @@ class User_model extends CI_Model
 		//tell the SMS Server that there is a new customer
 		$insert['secret_key'] = $new_id;//$this->_register_with_smsserver($insert['email_address'],1,0);		
 		log_message('debug', "Attempting to add new user: " . json_encode($insert));	
+
+		$this->db->insert('users',$insert);
+
 		if(!$this->config->config['unit_tests_running']){
-			$this->_send_activation_email($new_id);
+			$this->_send_activation_email($insert['id'],$insert['activation_key']);
 		}
 
 
-		if($this->db->insert('users',$insert)){
-			return $insert['id'];
-		}
-		else  {
-			return false;
-		}
-
+		return $insert['id'];
 		
 	}
 	public function get_user_by_email($email_address){
@@ -69,10 +66,11 @@ class User_model extends CI_Model
 		$shapassword = sha1($password . $this->config->config['hash']);
 		return $shapassword;
 	}
-	public function _send_activation_email($user_id){
+	public function _send_activation_email($user_id,$activation_key){
 		log_message('error', "ACTIVATION EMAIL NOT IMPLEMENTED.");	
 		$data = array();
 		$data['user_id'] = $user_id;
+		$data['activation_key'] = $activation_key;
 		$this->email_model->send_email("activation_email",$data);
 	}
 	public function _activate($activation_key){
@@ -84,8 +82,7 @@ class User_model extends CI_Model
 		return $q;
 	}
 	 public function _login($email_address, $password){
-	
-	$this->_rate_limit();
+
 	$shapassword = $this->_hash_password($password);
 	$this->db->where(array(
 		'email_address'=>$email_address,
@@ -97,7 +94,6 @@ class User_model extends CI_Model
 		{
 		
 		$this->session->set_flashdata('flash',"Login successful!");
-		$this->_reset_rate_limit();
 		$this->session->set_userdata(array(
 		'email_address'=>$q['email_address'],
 		'id'=>$q['id'],

@@ -64,6 +64,6 @@ if($error_flash != "")
 <?
 if($flash != "")
 {
-?><div class="alert alert-success "><a class="close fade in" data-dismiss="alert">x</a><?=$flash;?></div><?
+?><div class="alert alert-success"><a class="close fade in" data-dismiss="alert">x</a><?=$flash;?></div><?
 }
 ?>

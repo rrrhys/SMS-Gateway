@@ -5,7 +5,7 @@
 			<div class="control-group">
 				<label for="emailaddressr" class="control-label">Email Address</label>
 				<div class="controls">
-					<input type="text" name="emailaddressr" id="emailaddressr" class="span3 input-xlarge" />
+					<input type="text" name="email_addressr" id="email_addressr" class="span3 input-xlarge" />
 				</div>		
 			</div>
 			<div class="control-group">
@@ -33,8 +33,8 @@
 				</div>	
 			</div>
 			<div class="form-actions">
-				<div class="buttons">
-					<a href="#" class="btn btn-large btn-primary" id="submit_create_button"><i class="icon-ok icon-white"></i> Register</a>
+			<div class="buttons">
+					<a href="#" class="btn btn-large btn-primary" id="submit_create_button" onclick="document.forms['register_form'].submit()"><i class="icon-ok icon-white"></i> Register</a>
 				</div>	
 			</div>
 		</fieldset>

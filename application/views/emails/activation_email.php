@@ -1,1 +1,1 @@
-To finish setting up, click <a href="http://<?=$server?>/welcome/activate/<?=$activation_key?>">here</a> to activate your account.
+To finish setting up, click <a href="http://<?=$server?>/user/activate/<?=$activation_key?>">here</a> to activate your account.
