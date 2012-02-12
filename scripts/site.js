@@ -2,7 +2,7 @@ var templates = {};
 templates.load_templates = function(callback)
 	{
 		templates.templates_received = {};
-		$.post("/user/get_templates_json/",{},function(data){
+		$.post("/sms/get_templates_json/",{},function(data){
 			var dataobj = $.parseJSON(data);
 			templates.templates_received.templates = dataobj.templates;
 			if(typeof(callback) === "function")
@@ -39,7 +39,7 @@ var load_dashboard_sent = function()
 {
 	row_alt_class = "regular";
 	row_bottom_class = "";
-	$.post("/user/load_dashboard_sent_json",{},function(data){
+	$.post("/sms/load_dashboard_sent_json",{},function(data){
 		var dataobj = $.parseJSON(data);
 		$("#sms_sent_wrapper").html("");
 		if(dataobj.sms_sent.length == 0)
@@ -66,7 +66,7 @@ var load_dashboard_queued = function()
 {
 	row_alt_class = "regular";
 	row_bottom_class = "";
-	$.post("/user/load_dashboard_queued_json",{},function(data){
+	$.post("/sms/load_dashboard_queued_json",{},function(data){
 		var dataobj = $.parseJSON(data);
 		$("#sms_queued_wrapper").html("");
 		if(dataobj.sms_queued.length == 0)

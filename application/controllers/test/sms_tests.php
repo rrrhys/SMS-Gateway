@@ -20,10 +20,22 @@ class Sms_tests extends Toast
 	 */
 	function _pre() {
 		$this->load->model('user_model');
-		$this->data['fake_email'] = "foo@bar.com";
-		$this->data['password'] = "insecure_pass";
-		$this->data['timezone'] = "UP10";
-		$this->ids[] = $this->user_model->register($this->data['fake_email'], $this->data['password'], $this->data['timezone']);
+		$this->data['user']['fake_email'] = "foo@bar.com";
+		$this->data['user']['password'] = "insecure_pass";
+		$this->data['user']['timezone'] = "UP10";
+		$this->ids[] = $this->user_model->register(	$this->data['user']['fake_email'], 
+													$this->data['user']['password'], 
+													$this->data['user']['timezone']
+												);
+		$this->data['template']['name'] = "Test Template";
+		$this->data['template']['text'] = "Template Text";
+		$this->data['template']['fields_required'] = array('field_a','field_b');
+		$this->ids[] = $this->sms_model->save_template(
+					$this->ids[0],
+					$this->data['template']['name'],
+					$this->data['template']['text'],
+					$this->data['template']['fields_required']
+			);
 	}
 
 	/**
@@ -46,41 +58,66 @@ class Sms_tests extends Toast
 	function output($message){
 		$this->message .= ($this->message ? "<br />"  : "") . $message;
 	}
-	function test_good_template_saves(){
-		
+	function count_template(){
+		return $this->db->get('templates')->num_rows();
+
+	}
+	function test_add_good_template_saves(){
+		$count_templates = $this->count_template();
 		$new_id = $this->sms_model->save_template(
 					$this->ids[0],
-					"Test Template",
-					"Template text",
-					array('field_a','field_b')
+					$this->data['template']['name'],
+					$this->data['template']['text'],
+					$this->data['template']['fields_required']
 			);
 		$this->ids[] = $new_id;
-		if(!$this->_assert_true($new_id)){
-			$this->output("Good template should save.");
+		if($this->_assert_equals($count_templates+1,$this->count_template())){
+			$this->output("Good template saved.");
 		}
 		else {
 			$this->output("Good template incorrectly fails.");
 		}
 	}
+	function test_list_templates_works(){
+		$templates = $this->sms_model->get_templates_by_user_id($this->ids[0]);
+		if($this->_assert_equals($templates[0]['name'],"Test Template")){
+			$this->output("Templates List correctly.");
+		}
+		else {
+			$this->output("Templates list incorrectly.");
+		}
+	}
 
-	function test_bad_templates_fail(){
+	function test_add_bad_templates_fail(){
+		$count_templates = $this->count_template();
 		$new_id = $this->sms_model->save_template(
 					$this->ids[0],
 					"",
-					"Template text",
-					array('field_a','field_b')
+					$this->data['template']['text'],
+					$this->data['template']['fields_required']
 			);
 		$this->ids[] = $new_id;
-		if(!$this->_assert_false($new_id)){
-			$this->output("Bad template should fail.");
+		if($this->_assert_equals($count_templates,$this->count_template())){
+			$this->output("Bad template (no name) correctly fails.");
 		}
 		else {
-			$this->output("Bad template incorrectly saves.");
+			$this->output("Bad template (no name) incorrectly saves.");
 		}
-		
 
-		
-
+		$count_templates = $this->count_template();
+		$new_id = $this->sms_model->save_template(
+					$this->ids[0],
+					$this->data['template']['name'],
+					"",
+					$this->data['template']['fields_required']
+			);
+		$this->ids[] = $new_id;
+		if($this->_assert_equals($count_templates,$this->count_template())){
+			$this->output("Bad template (no text) correctly fails.");
+		}
+		else {
+			$this->output("Bad template (no text) incorrectly saves.");
+		}
 	}
 
 }
