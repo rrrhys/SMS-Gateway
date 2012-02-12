@@ -16,7 +16,7 @@
  */
 
 
-class Toast_all extends Controller
+class Toast_all extends CI_Controller
 {
 	// The folder INSIDE /controllers/ where the test classes are located
 	// TODO: autoset
@@ -34,10 +34,10 @@ class Toast_all extends Controller
 
 	function Toast_all()
 	{
-		parent::Controller();
+		parent::__construct();
 	}
 
-	function index()
+	function index($output_format = "")
 	{
 		$output = '';
 		
@@ -49,24 +49,28 @@ class Toast_all extends Controller
 		$test_urls = array();
 		foreach ($test_files as $file)
 		{
-			$test_urls[] = site_url($this->test_dir . $file . '/show_results');
+			$test_urls[] = site_url($this->test_dir . $file . '/show_results' . ($output_format ? "_" . $output_format : ""));
 		}
-
 		// Load header
+		if(!$output_format){
 		$output .= $this->load->view('test/header', NULL, TRUE);
-
+		}
 		// Aggregate test results
 		if ($this->multithreaded)
 		{
+
 			$output .= $this->_curl_get_multi($test_urls);
 		}
 		else
 		{
+
 			$output .= $this->_curl_get($test_urls);
 		}
 
 		// Load footer
+		if(!$output_format){
 		$output .= $this->load->view('test/footer', NULL, TRUE);
+		}
 		
 		// Send to display
 		echo $output;
@@ -106,7 +110,11 @@ class Toast_all extends Controller
 		$html_str = '';
 		foreach ($urls as $url)
 		{
+
 			$curl_handle=curl_init();
+			if(get_env() == "DEV"){
+			curl_setopt($curl_handle, CURLOPT_PROXY, '127.0.0.1:8888'); 
+			}
 			curl_setopt($curl_handle, CURLOPT_URL, $url);
 			curl_setopt($curl_handle, CURLOPT_RETURNTRANSFER, 1);
 			$html_str .= curl_exec($curl_handle);

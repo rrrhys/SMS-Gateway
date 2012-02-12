@@ -247,55 +247,8 @@ class User extends MY_Controller {
 		$this->load->view('preferences',$data);
 		$this->load->view('footer',$data);	
 	}
-	public function create_sms(){
-		$data = $this->_base_data();
-		$data['title'] = "Create a new SMS with SMS Gateway";
-		$this->load->view('header',$data);
-		$this->load->view('create_sms',$data);
-		$this->load->view('footer',$data);
-	}
-	public function get_templates_json()
-	{
-		$this->db->where('owner_id',$this->session->userdata('id'));
-		$q = $this->db->get('templates')->result_array();
-		$templates =array();
-		foreach($q as $row)
-		{
-			$this->db->where('template_id',$row['id']);
-			$fields = $this->db->get('template_fields')->result_array();
-			$row['fields_required'] = array();
-			foreach($fields as $field)
-			{
-			$row['fields_required'][] = $field['name'];
-			}
-			$templates[] = ($row);
-		}
-		echo json_encode(array('templates'=>$templates));
-		//echo json_encode($q);
-	}
-	public function save_template()
-	{
-		$fields_required = explode("|",$this->input->post("fields_required"));
-		var_dump($fields_required);
-		var_dump($_POST);
-		$new_template_id = get_uuid();
-		$template = array();
-		$template['name'] = $this->input->post("name");
-		$template['text'] = $this->input->post("text");
-		$template['owner_id'] = $this->session->userdata('id');
-		$template['id'] = $new_template_id;
-		
-		foreach($fields_required as $field_required)
-		{
-			$new_id = get_uuid();
-			$insert = array();
-			$insert['template_id'] = $new_template_id;
-			$insert['id'] = $new_id;
-			$insert['name'] = $field_required;
-			$this->db->insert('template_fields',$insert);
-		}
-		$this->db->insert('templates',$template);
-	}
+
+
 	
 	public function my_account()
 	{
@@ -320,7 +273,6 @@ class User extends MY_Controller {
 		$this->load->view('footer',$data);
 	}
 	
-
 	public function add_template()
 	{
 		$data = $this->_base_data();

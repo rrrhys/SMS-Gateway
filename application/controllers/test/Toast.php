@@ -52,6 +52,14 @@ abstract class Toast extends CI_Controller
 		$data['results'] = $this->unit->result();
 		$data['messages'] = $this->messages;
 		$this->load->view('test/results', $data);
+	}	
+	function show_results_json()
+	{
+		$this->_run_all();
+		$data['modelname'] = $this->modelname;
+		$data['results'] = $this->unit->result();
+		$data['messages'] = $this->messages;
+		echo json_encode($data);
 	}
 
 	function _show_all()
