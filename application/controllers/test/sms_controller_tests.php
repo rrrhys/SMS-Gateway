@@ -23,9 +23,20 @@ class Sms_controller_tests extends Toast
 				'schedule'=>'now',
 				'secret_key'=>$secret_key
 			)));
-			$this->_assert_equals($result->result,"success");
+			echo json_encode($result);
+			if($this->_assert_equals($result->result,"success")){
+				$this->output("Added to queue successfully");
+			}
 
+			$result =  json_decode($this->curl_get("/sms/get_dashboard_queued_json/" . $secret_key,array()
+			));
+			echo json_encode($result);
+			if($this->_assert_equals($result->result,"success")){
+				$this->output("Read queue successfully");
+			}
 	}
+
+
 	function curl_get($url,$kv_array){
 					//open connection
 					$url = $_SERVER['SERVER_NAME'] . $url;

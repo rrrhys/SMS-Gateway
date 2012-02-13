@@ -33,9 +33,17 @@ class Sms extends MY_Controller {
 		$this->load->view('footer',$data);
 	}
 
-	public function get_templates_json()
+	public function get_templates_json($secret_key = "")
 	{
-		$templates = $this->sms_model->get_templates_by_user_id($this->session->userdata('id'));
+		if($secret_key){
+			$user = $this->user_model->get_user_from_secret_key($secret_key);
+			$id = $user['id'];
+		}
+		else
+		{
+			$id = $this->session->userdata('id');
+		}
+		$templates = $this->sms_model->get_templates_by_user_id($id);
 		echo json_encode(array('templates'=>$templates));
 		//echo json_encode($q);
 	}
@@ -55,9 +63,17 @@ class Sms extends MY_Controller {
 		$this->load->view('create_template',$data);
 		$this->load->view('footer',$data);	
 	}
-	public function load_dashboard_sent_json()
+	public function get_dashboard_sent_json($secret_key = "")
 	{
-		$this->db->where('email_address',$this->session->userdata('email_address'));
+		if($secret_key){
+			$user = $this->user_model->get_user_from_secret_key($secret_key);
+			$id = $user['id'];
+		}
+		else
+		{
+			$id = $this->session->userdata('id');
+		}
+		$this->db->where('owner_id',$id);
 		$this->db->where("time_sent is not null",null,false);
 		$this->db->order_by("time_sent","desc");
 		
@@ -69,9 +85,17 @@ class Sms extends MY_Controller {
 		unset($r);
 		echo json_encode(array('sms_sent'=>$q));
 	}
-	public function load_dashboard_queued_json()
+	public function get_dashboard_queued_json($secret_key = "")
 	{
-		$this->db->where('email_address',$this->session->userdata('email_address'));
+		if($secret_key){
+			$user = $this->user_model->get_user_from_secret_key($secret_key);
+			$id = $user['id'];
+		}
+		else
+		{
+			$id = $this->session->userdata('id');
+		}
+		$this->db->where('owner_id',$id);
 		$this->db->where("time_sent is null",null,false);
 		$this->db->order_by("schedule","desc");
 		
@@ -96,7 +120,12 @@ class Sms extends MY_Controller {
 				if(!$secret_key){
 					$secret_key = $this->input->post("secret_key");
 				}
-				$sms_server_url = $this->config->item("smss_sms_server_url");
+				if(!$secret_key){
+					$retval['error_message'] = "SMS Gateway: Secret Key Invalid.";
+					echo $retval;
+					die();
+				}
+				
 				$schedule = $this->input->post("schedule");
 				if($schedule == "now")
 				{
@@ -106,13 +135,15 @@ class Sms extends MY_Controller {
 				if($callback_page == ""){
 					$callback_page = "http://" .$_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
 				}
-
+				$phone = $this->input->post('phone');
+				$message_text = $this->input->post('message_text');
 				//auth here - is this a legit secret key?
 				//if so get email address too.
 				$email_address = $this->session->userdata('email_address');
 				if($email_address == ""){
 					//get email address corresponding with secret key.
-					$email_address = $this->user_model->get_email_from_secret_key($secret_key);
+					$user = $this->user_model->get_user_from_secret_key($secret_key);
+					$email_address = $user['email_address'];
 				}
 				if($email_address == ""){
 					$retval['error_message'] = "SMS Gateway: Secret Key Invalid.";
@@ -122,15 +153,16 @@ class Sms extends MY_Controller {
 				//
 				$billing_id = $this->config->item("smss_billing_id");
 
-				$result = $this->sms_model->queue_sms(	$application_id,
+				$retval = $this->sms_model->queue_sms(	$application_id,
 														$billing_id,
 														$phone,
 														$message_text,
 														$schedule,
-														$callback_page);
+														$callback_page,
+														$secret_key);
 					//check that user token is ok....
 				//set POST variables
-				
+				echo json_encode($retval);
 			}
 			if($this->input->post("action") == "notify")
 			{
