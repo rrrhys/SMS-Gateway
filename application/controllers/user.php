@@ -32,15 +32,7 @@ class User extends MY_Controller {
 	 */
 	public function index()
 	{
-		if(!$this->logged_in())
-		{
-		redirect("welcome");
-		}
-		else
-		{
-		redirect("/user/create_sms");
-		}
-
+		redirect("/user/dashboard/");
 	}
 	public function _get_preferences()
 	{
@@ -60,7 +52,7 @@ class User extends MY_Controller {
 		{
 		$this->session->set_flashdata('error_flash',"Your activation was unsuccessful. Please try copy and pasting the link in the email into your browser address bar.");
 		}
-		redirect("/welcome/");
+		redirect("/");
 	}
 	public function register()
 	{
@@ -73,25 +65,25 @@ class User extends MY_Controller {
 			{
 			log_message('debug', "Email not valid: " . $this->input->post('email_addressr'));	
 				$this->session->set_flashdata('error_flash',"The email address supplied was invalid.");
-				redirect("/welcome/register");			
+				redirect("/user/register");			
 			}
 			if($this->user_model->email_exists($this->input->post('email_addressr')))
 			{
 			log_message('debug', "Email exists: " . $this->input->post('email_addressr'));	
 				$this->session->set_flashdata('error_flash',"This email address exists.");
-				redirect("/welcome/register");			
+				redirect("/user/register");			
 			}
 			if($this->input->post("passwordr") =="" || strlen($this->input->post("passwordr")) < 6)
 			{
 			log_message('debug', "Register failed - password too short");	
 				$this->session->set_flashdata('error_flash',"The password is too short.");
-				redirect("/welcome/register");			
+				redirect("/user/register");			
 			}
 			if($this->input->post("passwordr") != $this->input->post("passwordconfirmr"))
 			{
 			log_message('debug', "Register failed - password doesn't match");
 				$this->session->set_flashdata('error_flash',"The supplied passwords did not match.");
-				redirect("/welcome/register");			
+				redirect("/user/register");			
 			}
 			if(!phone_number_valid($this->input->post("phoner")))
 			{

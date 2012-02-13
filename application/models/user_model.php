@@ -58,6 +58,10 @@ class User_model extends CI_Model
 		$q = $this->db->get('users')->row_array();
 		return $q;
 	}
+	public function get_users(){
+		$q = $this->db->get('users')->result_array();
+		return $q;		
+	}
 	public function count_users(){
 		$q = $this->db->get('users')->num_rows();
 		return $q;
@@ -88,9 +92,8 @@ class User_model extends CI_Model
 		'email_address'=>$email_address,
 		'password'=>$shapassword,
 		'active'=>1));
-		$q = $this->db->get('users')->result_array();
-		$q = $q[0];
-		if(count($q) > 0)
+		$q = $this->db->get('users')->row_array();
+		if($q)
 		{
 		
 		$this->session->set_flashdata('flash',"Login successful!");
