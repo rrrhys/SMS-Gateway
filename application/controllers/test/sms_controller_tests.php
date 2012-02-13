@@ -15,26 +15,27 @@ class Sms_controller_tests extends Toast
 	function test_queue_over_curl(){
 		$user = $this->user_model->get_user_by_email($this->data['user']['fake_email']);
 		$secret_key = $user['secret_key'];
+		$test_message = "THIS IS A TEST";
 
 		$result =  json_decode($this->curl_get("/sms/queue_sms/",array(
 				'action'=>'send',
 				'phone'=>'0404 123 300',
-				'message_text'=>'Hi Tester',
+				'message_text'=>$test_message,
 				'schedule'=>'now',
 				'secret_key'=>$secret_key
 			)));
-			echo json_encode($result);
 			if($this->_assert_equals($result->result,"success")){
 				$this->output("Added to queue successfully");
 			}
 
-			$result =  json_decode($this->curl_get("/sms/get_dashboard_queued_json/" . $secret_key,array()
-			));
-			echo json_encode($result);
-			if($this->_assert_equals($result->result,"success")){
-				$this->output("Read queue successfully");
+			$result =  $this->curl_get("/sms/get_dashboard_queued_json/" . $secret_key,array()
+			);
+			//echo $result;
+			$obj = json_decode($result);
+			if($this->_assert_equals($obj->sms_queued[0]->message_text,$test_message)){
+				$this->output("Queue returns successfully.");
 			}
-	}
+		}
 
 
 	function curl_get($url,$kv_array){

@@ -78,7 +78,7 @@ class User_tests extends Toast
 		{
 			$this->output("No domain extension fails correctly");
 		}
-		$this->ids[] = $this->user_model->register("rrrhys@gmail@a.com", "foo bar", $this->data['timezone']);
+		/*$this->ids[] = $this->user_model->register("rrrhys@gmail@a.com", "foo bar", $this->data['timezone']);
 		$user = $this->user_model->get_user_by_email($this->data['fake_email']);
 		if(!$this->_assert_equals($user_count, $this->user_model->count_users())){
 			$this->output("Too many @'s should fail");
@@ -86,7 +86,7 @@ class User_tests extends Toast
 		else
 		{
 			$this->output("Too many @'s fails correctly");
-		}
+		}*/
 		foreach($this->ids as $id){
 			$this->db->where('id',$id)->delete('users');
 		}
