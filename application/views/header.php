@@ -58,12 +58,12 @@
 <?
 if($error_flash != "")
 {
-?><div class="alert alert-error"><a class="close fade in" data-dismiss="alert">x</a><?=$error_flash;?></div><?
+?><div class="alert alert-error fade in"><a class="close" data-dismiss="alert">x</a><?=$error_flash;?></div><?
 }
 ?>
 <?
 if($flash != "")
 {
-?><div class="alert alert-success"><a class="close fade in" data-dismiss="alert">x</a><?=$flash;?></div><?
+?><div class="alert alert-success fade in"><a class="close" data-dismiss="alert">x</a><?=$flash;?></div><?
 }
 ?>

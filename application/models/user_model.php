@@ -85,6 +85,11 @@ class User_model extends CI_Model
 		$q = $this->db->get('users')->num_rows();
 		return $q;
 	}
+	public function get_email_from_secret_key($secret_key){
+		$this->db->where('secret_key',$secret_key);
+		$q = $this->db->get('users')->row_array();
+		return $q['email_address'];
+	}
 	 public function _login($email_address, $password){
 
 	$shapassword = $this->_hash_password($password);

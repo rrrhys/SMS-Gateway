@@ -38,6 +38,7 @@ abstract class Toast extends CI_Controller
 		$this->modelname = $name;
 		$this->modelname_short = basename($name, '.php');
 		$this->messages = array();
+		$this->config->config['unit_tests_running'] = true;
 	}
 
 	function index()

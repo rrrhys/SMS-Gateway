@@ -7,7 +7,7 @@
 <p><br />A cURL request is below for your information, and a detailed break-up of variables used</p>
 <pre class="prettyprint
      linenums">
-curl http://test.smsgateway.dev/user/queue_sms \
+curl http://test.smsgateway.dev/sms/queue_sms \
    -d action=send \
    -d "phone=0404 123 300" \
    -d "message_text=Hi Mr Tester" \

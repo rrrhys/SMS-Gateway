@@ -11,7 +11,7 @@ class Sms_tests extends Toast
 		// Load any models, libraries etc. you need here
 		$this->load->model('user_model');
 		$this->load->model('sms_model');
-		$this->config->config['unit_tests_running'] = true;
+		
 	}
 
 	/**

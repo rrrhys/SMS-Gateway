@@ -10,7 +10,6 @@ class Sms_model extends CI_Model
 		$this->load->model('email_model');
 	}
 
-
 	function save_template($owner_id, $template_name, $template_text, $fields_required){
 		$new_template_id = get_uuid();
 		$template['owner_id'] = $owner_id;

@@ -145,7 +145,7 @@ class User extends MY_Controller {
 			
 			$this->session->unset_userdata('email_address');
 			$this->session->set_flashdata('flash',"You have been logged out successfully.");
-			redirect("/welcome");
+			redirect("/");
 		}
 		else
 		{
