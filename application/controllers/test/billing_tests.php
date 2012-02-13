@@ -5,12 +5,14 @@ class Billing_tests extends Toast
 {
 	public $data = array();
 	public $ids = array();
+	public $date;// current date
 	function Billing_tests()
 	{
 		parent::Toast(__FILE__);
 		// Load any models, libraries etc. you need here
 		$this->load->model('user_model');
 		$this->load->model('sms_model');
+		$this->load->model('billing_model');
 		$this->config->config['unit_tests_running'] = true;
 	}
 
@@ -19,6 +21,7 @@ class Billing_tests extends Toast
 	 * Good for doing cleanup: resetting sessions, renewing objects, etc.
 	 */
 	function _pre() {
+		$this->date = date("Y-m-d");
 		$this->load->model('user_model');
 		$this->data['user']['fake_email'] = "foo@bar.com";
 		$this->data['user']['password'] = "insecure_pass";
@@ -27,15 +30,17 @@ class Billing_tests extends Toast
 													$this->data['user']['password'], 
 													$this->data['user']['timezone']
 												);
-		$this->data['template']['name'] = "Test Template";
-		$this->data['template']['text'] = "Template Text";
-		$this->data['template']['fields_required'] = array('field_a','field_b');
-		$this->ids[] = $this->sms_model->save_template(
-					$this->ids[0],
-					$this->data['template']['name'],
-					$this->data['template']['text'],
-					$this->data['template']['fields_required']
-			);
+		$insert_id = get_uuid();
+		//gc
+		$this->ids[] = $insert_id;
+		$this->data['quota'] = array('id'=>$insert_id,
+						'owner_id'=>$this->ids[0],
+						'sms_available'=>10,
+						'period_start'=>date( 'Y-m-d H:i:s', time()),
+						'period_end'=>date("Y-m-d H:i:s", strtotime($this->date . " +1 month")),
+						'active'=>1
+						);
+		
 	}
 
 	/**
@@ -45,79 +50,69 @@ class Billing_tests extends Toast
 	function _post() {
 		foreach($this->ids as $id){
 		$this->db->where('id',$id);
-		$this->db->delete('templates');
-		$this->db->where('template_id',$id);
-		$this->db->delete('template_fields');
-		$this->db->where('id',$id);
-		$this->db->delete('users');
+		$this->db->delete('billing');
+		}
+	}
+	function test_quota_returns_successfully(){
+		
+		$insert = $this->data['quota'];
+		$this->db->insert('billing',$insert);
+		$quota = $this->billing_model->get_quota($this->ids[0]);
+		if($this->_assert_true(isset($quota['owner_id']))){
+			$this->output("Correctly returns quota");
+		}
+		else{
+			$this->output("Does not return any quota");
+			$this->output(json_encode($quota));
+		}		
+		if($this->_assert_equals($quota['owner_id'],$this->ids[0])){
+			$this->output("Correctly returns quota");
+		}
+		else{
+			$this->output("Does not return correct quota");
+			$this->output(json_encode($quota));
 		}
 	}
 
+	function test_expired_quota_resets_successfully(){
+
+		$insert = $this->data['quota'];
+		//collect for GC.
+		$insert['period_end']=date("Y-m-d H:i:s", strtotime($this->date . " - 5 minute"));
+		$this->db->insert('billing',$insert);
+		
+		$this->billing_model->check_quotas_and_resets();
+		$new_quota = $this->billing_model->get_quota($this->ids[0]);
+		//collect for GC.
+		$this->ids[] = $new_quota['id'];
+		$old_quota = $this->billing_model->get_quota_by_id($insert['id']);
+		$this->_assert_not_equals($new_quota['id'],$old_quota['id']);
+	}
+	function test_current_quota_does_not_reset(){
+
+		$insert = $this->data['quota'];
+		$insert['period_end']=date("Y-m-d H:i:s", strtotime($this->date . " + 5 minute"));
+		$this->db->insert('billing',$insert);
+
+		$this->billing_model->check_quotas_and_resets();
+		$new_quota = $this->billing_model->get_quota($this->ids[0]);
+		//GC
+		$this->ids[] = $new_quota['id'];
+		$old_quota = $this->billing_model->get_quota_by_id($insert['id']);
+		$this->_assert_not_equals($new_quota['id'],$old_quota['id']);
+	}
+	function test_queue_sms_decreases_quota(){
+		
+		$this->_assert_true(false);
+	}
+	/*
+	function test_quota_creates_if_not_exist(){
+		$this->_assert_true(false);
+	}*/
 
 	/* TESTS BELOW */
 	function output($message){
 		$this->message .= ($this->message ? "<br />"  : "") . $message;
-	}
-	function count_template(){
-		return $this->db->get('templates')->num_rows();
-
-	}
-	function test_add_good_template_saves(){
-		$count_templates = $this->count_template();
-		$new_id = $this->sms_model->save_template(
-					$this->ids[0],
-					$this->data['template']['name'],
-					$this->data['template']['text'],
-					$this->data['template']['fields_required']
-			);
-		$this->ids[] = $new_id;
-		if($this->_assert_equals($count_templates+1,$this->count_template())){
-			$this->output("Good template saved.");
-		}
-		else {
-			$this->output("Good template incorrectly fails.");
-		}
-	}
-	function test_list_templates_works(){
-		$templates = $this->sms_model->get_templates_by_user_id($this->ids[0]);
-		if($this->_assert_equals($templates[0]['name'],"Test Template")){
-			$this->output("Templates List correctly.");
-		}
-		else {
-			$this->output("Templates list incorrectly.");
-		}
-	}
-
-	function test_add_bad_templates_fail(){
-		$count_templates = $this->count_template();
-		$new_id = $this->sms_model->save_template(
-					$this->ids[0],
-					"",
-					$this->data['template']['text'],
-					$this->data['template']['fields_required']
-			);
-		$this->ids[] = $new_id;
-		if($this->_assert_equals($count_templates,$this->count_template())){
-			$this->output("Bad template (no name) correctly fails.");
-		}
-		else {
-			$this->output("Bad template (no name) incorrectly saves.");
-		}
-
-		$count_templates = $this->count_template();
-		$new_id = $this->sms_model->save_template(
-					$this->ids[0],
-					$this->data['template']['name'],
-					"",
-					$this->data['template']['fields_required']
-			);
-		$this->ids[] = $new_id;
-		if($this->_assert_equals($count_templates,$this->count_template())){
-			$this->output("Bad template (no text) correctly fails.");
-		}
-		else {
-			$this->output("Bad template (no text) incorrectly saves.");
-		}
 	}
 
 }
