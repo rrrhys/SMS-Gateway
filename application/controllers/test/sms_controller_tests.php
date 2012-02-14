@@ -36,7 +36,39 @@ class Sms_controller_tests extends Toast
 				$this->output("Queue returns successfully.");
 			}
 		}
+	
+	function test_activation_login_dashboard(){
+		//log user in over POST.
 
+
+
+		//get user details so I have key.
+		$user = $this->user_model->get_user_by_email($this->data['user']['fake_email']);
+		if($this->_assert_equals($user['active'],0)){
+			$this->output("New user is (correctly) initially inactive");
+		}
+		else{$this->output("New user incorrectly initially inactive");}
+		//activate this guy
+		$result = $this->curl_get("/user/activate",array(
+			'activation_key'=>$user['activation_key']));
+		$user = $this->user_model->get_user_by_email($this->data['user']['fake_email']);
+		if($this->_assert_equals($user['active'],1)){
+			$this->output("New user activated correctly! (Over Curl)");
+		}
+		else{$this->output("New user failed activation! (Over Curl)");}
+
+		$secret_key = $user['secret_key'];
+
+		$result = $this->curl_get("/user/dashboard",array(
+			'login_secret_key'=>$user['secret_key'],
+			'login_email_address'=>$user['email_address']));
+			$match_string = "<title>Dashboard - SMS Sent and Queued</title>";
+		if($this->_assert_true(strpos($result, $match_string))){
+				$this->output("New user dashboard loads correctly!");
+			}else{
+				$this->output("New user dashboard does not load correctly. Could not find " . strip_tags($match_string));
+			}
+	}
 
 	function curl_get($url,$kv_array){
 					//open connection
@@ -84,6 +116,8 @@ class Sms_controller_tests extends Toast
 		foreach($this->ids as $id){
 		$this->db->where('id',$id);
 		$this->db->delete('users');
+		$this->db->where('owner_id',$id);
+		$this->db->delete('sms');
 		}
 	}
 

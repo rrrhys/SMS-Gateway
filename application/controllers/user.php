@@ -5,7 +5,12 @@ class User extends MY_Controller {
 	{
 		parent::__construct();
 	
-
+		//let user log in by specifying their secret key.
+		if($this->input->post("login_secret_key") && $this->input->post("login_email_address")){
+			$login_secret_key = $this->input->post("login_secret_key");
+			$login_email_address = $this->input->post("login_email_address");
+			$messages = $this->user_model->_login($login_email_address,"",$login_secret_key);
+		}
 	}
 	function _old_pass_correct($sha_password,$email_address)
 	{
@@ -41,8 +46,11 @@ class User extends MY_Controller {
 	$q = $q[0];
 	return $q;
 	}
-	public function activate($activation_key)
+	public function activate($activation_key = "")
 	{
+		if(!$activation_key){
+			$activation_key = $this->input->post("activation_key");
+		}
 		if($this->user_model->_activate($activation_key))
 		{
 		$this->session->set_flashdata('flash',"Your account has been activated successfully! <br />Please log-in to use SMS Gateway.");
@@ -256,6 +264,7 @@ class User extends MY_Controller {
 	public function dashboard()
 	{
 		if(!$this->logged_in()){
+			echo "redir";
 			redirect("/");
 		}
 		$data = $this->_base_data();

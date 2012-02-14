@@ -21,6 +21,8 @@ class Billing_tests extends Toast
 	 * Good for doing cleanup: resetting sessions, renewing objects, etc.
 	 */
 	function _pre() {
+		unset($this->ids);
+		$this->ids = array();
 		$this->date = date("Y-m-d");
 		$this->load->model('user_model');
 		$this->data['user']['fake_email'] = "foo@bar.com";
@@ -49,8 +51,12 @@ class Billing_tests extends Toast
 	 */
 	function _post() {
 		foreach($this->ids as $id){
-		$this->db->where('id',$id);
-		$this->db->delete('billing');
+			$this->db->where('id',$id);
+			$this->db->delete('billing');
+			$this->db->where('id',$id);
+			$this->db->delete('users');
+			$this->db->where('owner_id',$id);
+			$this->db->delete('billing');
 		}
 	}
 	function test_quota_returns_successfully(){
@@ -72,6 +78,7 @@ class Billing_tests extends Toast
 			$this->output("Does not return correct quota");
 			$this->output(json_encode($quota));
 		}
+
 	}
 
 	function test_expired_quota_resets_successfully(){
@@ -87,6 +94,7 @@ class Billing_tests extends Toast
 		$this->ids[] = $new_quota['id'];
 		$old_quota = $this->billing_model->get_quota_by_id($insert['id']);
 		$this->_assert_not_equals($new_quota['id'],$old_quota['id']);
+
 	}
 	function test_current_quota_does_not_reset(){
 

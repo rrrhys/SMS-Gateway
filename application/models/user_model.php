@@ -90,13 +90,20 @@ class User_model extends CI_Model
 		$q = $this->db->get('users')->row_array();
 		return $q;
 	}
-	 public function _login($email_address, $password){
+	 public function _login($email_address = "", $password = "",$secret_key = ""){
 
+	 if($password){
 	$shapassword = $this->_hash_password($password);
 	$this->db->where(array(
 		'email_address'=>$email_address,
 		'password'=>$shapassword,
 		'active'=>1));
+	}else{
+	$this->db->where(array(
+		'email_address'=>$email_address,
+		'secret_key'=>$secret_key,
+		'active'=>1));		
+	}
 		$q = $this->db->get('users')->row_array();
 		if($q)
 		{
