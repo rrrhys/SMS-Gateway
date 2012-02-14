@@ -9,8 +9,10 @@ class Sms extends MY_Controller {
 
 	}
 	public function api_reference(){
+		$secret_key = '11111111111111.22222222';
 		$data = $this->_base_data();
 		$data['title'] = "API Reference";
+		$data['secret_key'] = $secret_key;
 		$this->load->view('header',$data);
 		$this->load->view('api_reference',$data);
 		$this->load->view('footer',$data);		
@@ -63,7 +65,7 @@ class Sms extends MY_Controller {
 		$this->load->view('create_template',$data);
 		$this->load->view('footer',$data);	
 	}
-	public function get_dashboard_sent_json($secret_key = "")
+	public function get_sent_json($secret_key = "")
 	{
 		if($secret_key){
 			$user = $this->user_model->get_user_from_secret_key($secret_key);
@@ -81,11 +83,14 @@ class Sms extends MY_Controller {
 		foreach($q as &$r)
 		{
 		$r['time_sent'] = convert_from_gmt($r['time_sent'],$this->session->userdata('timezone'));
+		unset($r['company_id']);
+		unset($r['popup_notified']);
+		unset($r['icon_notified']);
 		}
 		unset($r);
 		echo json_encode(array('sms_sent'=>$q));
 	}
-	public function get_dashboard_queued_json($secret_key = "")
+	public function get_queued_json($secret_key = "")
 	{
 		if($secret_key){
 			$user = $this->user_model->get_user_from_secret_key($secret_key);
@@ -103,6 +108,9 @@ class Sms extends MY_Controller {
 		foreach($q as &$r)
 		{
 		$r['schedule'] = convert_from_gmt($r['schedule'],$this->session->userdata('timezone'));
+		unset($r['company_id']);
+		unset($r['popup_notified']);
+		unset($r['icon_notified']);
 		}
 		unset($r);
 		echo json_encode(array('sms_queued'=>$q));

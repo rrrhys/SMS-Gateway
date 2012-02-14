@@ -28,7 +28,7 @@ class Sms_controller_tests extends Toast
 				$this->output("Added to queue successfully");
 			}
 
-			$result =  $this->curl_get("/sms/get_dashboard_queued_json/" . $secret_key,array()
+			$result =  $this->curl_get("/sms/get_queued_json/" . $secret_key,array()
 			);
 			//echo $result;
 			$obj = json_decode($result);
@@ -70,28 +70,7 @@ class Sms_controller_tests extends Toast
 			}
 	}
 
-	function curl_get($url,$kv_array){
-					//open connection
-					$url = $_SERVER['SERVER_NAME'] . $url;
-			$fields_string = "";
-			foreach($kv_array as $key=>$value) { $fields_string .= $key.'='.$value.'&'; }
-			rtrim($fields_string,'&');
 
-			$ch = curl_init();
-			if(get_env() == "DEV"){
-			curl_setopt($ch, CURLOPT_PROXY, '127.0.0.1:8888'); 
-			}
-			//set the url, number of POST vars, POST data
-			curl_setopt($ch,CURLOPT_URL,$url);
-			curl_setopt($ch,CURLOPT_POST,count($kv_array));
-			curl_setopt($ch,CURLOPT_POSTFIELDS,$fields_string);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-
-			//execute post
-			$result = curl_exec($ch);
-			curl_close($ch);
-			return $result;
-	}
 	/**
 	 * OPTIONAL; Anything in this function will be run before each test
 	 * Good for doing cleanup: resetting sessions, renewing objects, etc.

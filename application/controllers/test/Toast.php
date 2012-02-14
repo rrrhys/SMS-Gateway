@@ -271,7 +271,7 @@ abstract class Toast extends CI_Controller
 			return FALSE;
 		}
 	}
-		function curl_get($url,$kv_array){
+		function curl_get($url,$kv_array = array(){
 					//open connection
 					$url = $_SERVER['SERVER_NAME'] . $url;
 			$fields_string = "";

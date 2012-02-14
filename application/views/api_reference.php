@@ -12,7 +12,7 @@ curl http://test.smsgateway.dev/sms/queue_sms \
    -d "phone=0404 123 300" \
    -d "message_text=Hi Mr Tester" \
    -d "schedule=now" \
-   -d "secret_key=11111111111111.1111111"
+   -d "secret_key=<?=$secret_key?>"
 </pre>
 
 <table class="table table-striped">
@@ -52,7 +52,7 @@ curl http://test.smsgateway.dev/sms/queue_sms \
 		</tr>
 		<tr>
 			<td>secret_key</td>
-			<td>11111111111111.22222222</td>
+			<td><?=$secret_key?></td>
 			<td>Your Secret Key as seen in your Account Settings.<br />Used to bill you correctly for your SMS usage and return account information</td>
 			<td><i class="icon-ok"></i></td>
 		</tr>
@@ -77,14 +77,79 @@ curl http://test.smsgateway.dev/user/get_templates_json
 		{	"id":"11111111111111.33333333",
 			"name":"Hello World Template",
 			"text":"Hi {name}",
-			"owner_id":"11111111111111.22222222",
+			"owner_id":"<?=$secret_key?>",
 			"fields_required":["","name"]
 		},
 		{	"id":"11111111111111.44444444",
 			"name":"Hi There Template",
 			"text":"Hi there {Name}",
-			"owner_id":"11111111111111.22222222",
+			"owner_id":"<?=$secret_key?>",
 			"fields_required":["","Name"]
 		}
 	]}
-</pre><br />Page rendered in {elapsed_time} seconds</p>
+</pre>
+
+<h3>List SMS Waiting in Queue</h3>
+<pre class="prettyprint
+     linenums">
+curl http://test.smsgateway.dev/sms/get_queued_json/<?=$secret_key?>
+</pre> where <?=$secret_key?> is your secret key.
+<p>Example of JSON package returned:
+<pre class="prettyprint
+     linenums">
+{"sms_queued":[
+		{	"id":"11111111111111.33333333",
+			"phone":"0404123400",
+			"message_text":"Hey tester",
+			"schedule":"14\/02\/2012 19:21",
+			"secret_key":"<?=$secret_key?>",
+			"owner_id":"11111111111111.44444444",
+			"time_queued":"2012-02-14 09:21:46"
+			"time_sent":null,
+			"time_notified":null
+		}
+		{	"id":"11111111111111.33333334",
+			"phone":"0404123400",
+			"message_text":"Hey tester",
+			"schedule":"14\/02\/2012 19:21",
+			"secret_key":"<?=$secret_key?>",
+			"owner_id":"11111111111111.44444444",
+			"time_queued":"2012-02-14 09:21:46"
+			"time_sent":null,
+			"time_notified":null
+		}	
+	]}
+</pre>
+
+<h3>List SMS Sent</h3>
+<pre class="prettyprint
+     linenums">
+curl http://test.smsgateway.dev/sms/get_sent_json/<?=$secret_key?>
+</pre> where <?=$secret_key?> is your secret key.
+<p>Example of JSON package returned:
+<pre class="prettyprint
+     linenums">
+{"sms_queued":[
+		{	"id":"11111111111111.33333333",
+			"phone":"0404123400",
+			"message_text":"Hey tester",
+			"schedule":"14\/02\/2012 19:21",
+			"secret_key":"<?=$secret_key?>",
+			"owner_id":"11111111111111.44444444",
+			"time_queued":"2012-02-14 09:21:46"
+			"time_sent":"2012-02-14 09:21:46",
+			"time_notified":null
+		}
+		{	"id":"11111111111111.33333334",
+			"phone":"0404123400",
+			"message_text":"Hey tester",
+			"schedule":"14\/02\/2012 19:21",
+			"secret_key":"<?=$secret_key?>",
+			"owner_id":"11111111111111.44444444",
+			"time_queued":"2012-02-14 09:21:46"
+			"time_sent":"2012-02-14 09:21:46",
+			"time_notified":null
+		}	
+	]}
+</pre>
+<br />Page rendered in {elapsed_time} seconds</p>

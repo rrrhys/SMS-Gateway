@@ -39,7 +39,7 @@ var load_dashboard_sent = function()
 {
 	row_alt_class = "regular";
 	row_bottom_class = "";
-	$.post("/sms/get_dashboard_sent_json",{},function(data){
+	$.post("/sms/get_sent_json",{},function(data){
 		var dataobj = $.parseJSON(data);
 		$("#sms_sent_wrapper").html("");
 		if(dataobj.sms_sent.length == 0)
@@ -66,7 +66,7 @@ var load_dashboard_queued = function()
 {
 	row_alt_class = "regular";
 	row_bottom_class = "";
-	$.post("/sms/get_dashboard_queued_json",{},function(data){
+	$.post("/sms/get_queued_json",{},function(data){
 		var dataobj = $.parseJSON(data);
 		$("#sms_queued_wrapper").html("");
 		if(dataobj.sms_queued.length == 0)
