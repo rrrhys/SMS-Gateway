@@ -8,6 +8,7 @@ class Sms_model extends CI_Model
 		parent::__construct();
 		$this->load->database();
 		$this->load->model('email_model');
+		$this->load->model('billing_model');
 	}
 	function queue_sms(	$application_id,$billing_id,$phone,$message_text,$schedule,$callback_page,$secret_key){
 		$user = $this->user_model->get_user_from_secret_key($secret_key);
@@ -53,14 +54,15 @@ class Sms_model extends CI_Model
 				//sms was queued successfully - add it to transaction log.
 				$insert = array(
 					'id'=>$return_object->sms_id,
-					'phone'=>$this->input->post('phone'),
-					'message_text'=>$this->input->post('message_text'),
+					'phone'=>$phone,
+					'message_text'=>$message_text,
 					'schedule'=>$schedule,
 					'secret_key'=>$secret_key,
 					'owner_id'=>$user['id'],
 					'time_queued'=>date ("Y-m-d H:i:s",now()),
 					'company_id'=>'');
 					$this->db->insert('sms',$insert);
+				$this->billing_model->use_credit($user['id'],1,$return_object->sms_id);
 				$retval['result'] = "success";
 				$retval['error_message'] = "";
 			}

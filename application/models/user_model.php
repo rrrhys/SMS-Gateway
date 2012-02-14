@@ -53,6 +53,11 @@ class User_model extends CI_Model
 		return $insert['id'];
 		
 	}
+	public function get_user_by_id($id){
+		$this->db->where('id',$id);
+		$q = $this->db->get('users')->row_array();
+		return $q;		
+	}
 	public function get_user_by_email($email_address){
 		$this->db->where('email_address',$email_address);
 		$q = $this->db->get('users')->row_array();

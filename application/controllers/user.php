@@ -277,6 +277,7 @@ class User extends MY_Controller {
 
 	public function get_notifications_json()
 	{
+		return false;
 		$this->db->where("time_notified < ", date ('Y-m-d H:i:s',now()));
 		$this->db->where("popup_notified",0);
 		

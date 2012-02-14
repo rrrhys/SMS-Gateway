@@ -14,6 +14,11 @@ class Billing_model extends CI_Model
 	public function check_quotas_and_resets(){
 		$users = $this->user_model->get_users();
 		foreach($users as $user){
+			$this->check_quota_and_reset($user['id']);
+		}
+	}
+	public function check_quota_and_reset($owner_id){
+		$user = $this->user_model->get_user_by_id($owner_id);
 			$q = $this->get_quota($user['id']);
 			if($q){
 				//is the date higher than the billing end date?
@@ -29,13 +34,31 @@ class Billing_model extends CI_Model
 			else{
 				$this->_reset_quota($user['id']);
 			}
-		}
 	}
 	public function get_quota($owner_id){
+		
 		$this->db->where('active',1);
 		$this->db->where('owner_id',$owner_id);
 		$q = $this->db->get('billing')->row_array();
 		return $q;
+	}
+	public function use_credit($owner_id,$credit_count,$transaction_id){
+		$this->check_quota_and_reset($owner_id);
+		$account = $this->get_quota($owner_id);
+		$sms_available = $account['sms_available'];
+		$sms_available -= $credit_count;
+		if($sms_available<0){
+			return false;
+		}
+		$insert = array('id'=>get_uuid(),
+						'sms_id'=>$transaction_id,
+						'owner_id'=>$owner_id,
+						'billing_id'=>$account['id']);
+		$this->db->insert('billing_detail',$insert);
+		$this->db->where('owner_id',$owner_id);
+		$this->db->update('billing',array('sms_available'=>$sms_available));
+
+		return true;
 	}
 	public function get_quota_by_id($id){
 		$this->db->where('id',$id);

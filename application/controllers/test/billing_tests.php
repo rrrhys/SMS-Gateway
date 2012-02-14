@@ -110,8 +110,29 @@ class Billing_tests extends Toast
 		$this->_assert_not_equals($new_quota['id'],$old_quota['id']);
 	}
 	function test_queue_sms_decreases_quota(){
-		
-		$this->_assert_true(false);
+		//give this guy a quota
+		$insert = $this->data['quota'];
+		$insert['period_end']=date("Y-m-d H:i:s", strtotime($this->date . " + 5 minute"));
+
+		$sms_start = $insert['sms_available'];
+		$this->db->insert('billing',$insert);
+
+		//insert an SMS into the queue
+		$user = $this->user_model->get_user_by_email($this->data['user']['fake_email']);
+		$secret_key = $user['secret_key'];
+		$test_message = "THIS IS A TEST";
+
+		$this->curl_get("/sms/queue_sms/",array(
+				'action'=>'send',
+				'phone'=>'0404 123 300',
+				'message_text'=>$test_message,
+				'schedule'=>'now',
+				'secret_key'=>$secret_key
+			));
+
+		//get quota, check it has dropped by one.
+		$quota = $this->billing_model->get_quota($user['id']);
+		$this->_assert_equals($sms_start-1,$quota['sms_available']);
 	}
 	/*
 	function test_quota_creates_if_not_exist(){

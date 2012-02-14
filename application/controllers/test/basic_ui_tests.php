@@ -50,7 +50,11 @@ class Basic_ui_tests extends Toast
 
 			//execute post
 			$result = curl_exec($ch);
+
+			curl_close($ch);
 			return $result;
+
+
 	}
 	/* TESTS BELOW */
 	function output($message){
