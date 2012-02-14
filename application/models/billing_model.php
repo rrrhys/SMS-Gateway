@@ -44,11 +44,15 @@ class Billing_model extends CI_Model
 	}
 	public function get_billing_breakdown($owner_id){
 		$this->check_quota_and_reset($owner_id);
-		$this->db->select('billing.period_start,billing.period_end,active,billing_detail.*');
+		$this->db->select('billing.period_start,billing.period_end,active,billing_detail.*,sms.phone, sms.message_text');
 		$this->db->from('billing');
 		$this->db->join('billing_detail','billing.id = billing_detail.billing_id');
+		$this->db->join('sms','sms.id = billing_detail.sms_id');
 		$this->db->where('billing.owner_id',$owner_id);
-		return $this->db->get()->result_array();
+
+		$details = $this->db->get()->result_array();
+		$summary = $this->get_quota($owner_id);
+		return array('details'=>$details,'summary'=>$summary);
 	}
 	public function use_credit($owner_id,$credit_count,$transaction_id){
 		$this->check_quota_and_reset($owner_id);
@@ -61,7 +65,8 @@ class Billing_model extends CI_Model
 		$insert = array('id'=>get_uuid(),
 						'sms_id'=>$transaction_id,
 						'owner_id'=>$owner_id,
-						'billing_id'=>$account['id']);
+						'billing_id'=>$account['id'],
+						'credit_used'=>$credit_count);
 		$this->db->insert('billing_detail',$insert);
 		$this->db->where('owner_id',$owner_id);
 		$this->db->update('billing',array('sms_available'=>$sms_available));

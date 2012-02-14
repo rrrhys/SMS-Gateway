@@ -9,7 +9,12 @@ class Billing extends MY_Controller {
 	}
 
 	public function summary(){
-		echo json_encode($this->billing_model->get_billing_breakdown($this->session->userdata('id')));
+		$data = $this->_base_data();
+		$data['title'] = "Billing Summary";
+		$data['billing_summary'] = $this->billing_model->get_billing_breakdown($this->session->userdata('id'));
+		$this->load->view('header',$data);
+		$this->load->view('billing_summary',$data);
+		$this->load->view('footer',$data);
 	}
 
 }

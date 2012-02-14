@@ -6,7 +6,10 @@
           	<tr>
           		<td>Secret Key <i class="icon-question-sign" rel="popover_secret_key" data-content="Secret Key for use in API Requests" data-original-title="Secret Key"></i></td>
           		<td><span id="secret_key"><?=$secret_key?></span> <a id="copy_secret_key">copy</a></td>
-          	
+          	<tr>
+              <td>Billing Summary</td>
+              <td><a href="/billing/summary/">View</a></td>
+            </tr>
           	</tr>
           </table>
          </fieldset>
