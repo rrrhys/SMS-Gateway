@@ -5,15 +5,11 @@ class Billing extends MY_Controller {
 	{
 		parent::__construct();
 	$this->load->model("user_model");
-
-	//billing reset code goes here
-	$this->_check_quota_resets();
-
+	$this->load->model('billing_model');
 	}
 
-	public function set_quota($user_id, $quota){
-		
+	public function summary(){
+		echo json_encode($this->billing_model->get_billing_breakdown($this->session->userdata('id')));
 	}
-
 
 }

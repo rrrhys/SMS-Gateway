@@ -42,6 +42,14 @@ class Billing_model extends CI_Model
 		$q = $this->db->get('billing')->row_array();
 		return $q;
 	}
+	public function get_billing_breakdown($owner_id){
+		$this->check_quota_and_reset($owner_id);
+		$this->db->select('billing.period_start,billing.period_end,active,billing_detail.*');
+		$this->db->from('billing');
+		$this->db->join('billing_detail','billing.id = billing_detail.billing_id');
+		$this->db->where('billing.owner_id',$owner_id);
+		return $this->db->get()->result_array();
+	}
 	public function use_credit($owner_id,$credit_count,$transaction_id){
 		$this->check_quota_and_reset($owner_id);
 		$account = $this->get_quota($owner_id);
